@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nikon: From Space to Street - Anime Style Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=Noto+Sans+TC:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nikonYellow: '#FFE000',
+                        deepCyber: '#0A0A0F',
+                        neonBlue: '#00F2FF',
+                        crimsonEdge: '#FF2D55',
+                        glassBg: 'rgba(255, 255, 255, 0.03)',
+                    },
+                    fontFamily: {
+                        display: ['Outfit', 'Noto Sans TC', 'sans-serif'],
+                        body: ['Noto Sans TC', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        glow: {
+                            'from': { textShadow: '0 0 10px #FFE000, 0 0 20px #FFE000' },
+                            'to': { textShadow: '0 0 20px #FFE000, 0 0 40px #FFB800' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0A0A0F;
+            color: #E2E8F0;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 224, 0, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 242, 255, 0.05) 0%, transparent 40%);
+        }
+
+        .glass-panel {
+            background: rgba(15, 15, 20, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #FFE000;
+        }
+
+        .anime-border {
+            position: relative;
+        }
+
+        .anime-border::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #FFE000;
+            z-index: -1;
+            transition: all 0.3s ease;
+        }
+
+        .anime-border:hover::after {
+            bottom: -10px;
+            right: -10px;
+        }
+
+        .manga-line {
+            height: 2px;
+            background: linear-gradient(90deg, #FFE000 0%, transparent 100%);
+        }
+
+        .tech-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+        }
+
+        /* Styling for the passed image */
+        .banner-container img {
+            width: 100%;
+            height: 60vh;
+            object-fit: cover;
+            filter: saturate(1.2) contrast(1.1);
+            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            color: #FFE000;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: '//';
+            margin-right: 0.5rem;
+            color: #00F2FF;
+        }
+
+        ::selection {
+            background: #FFE000;
+            color: #000;
+        }
+    </style>
+</head>
+<body class="font-body leading-relaxed">
+
+    <!-- Hero Section -->
+    <header class="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0 banner-container">
+            <img src='https://opal.google/board/blobs/0ffd16c9-4ee8-4986-b6ac-8eab810af236' alt='Nikon Anime Style Banner' />
+        </div>
+        
+        <div class="absolute inset-0 bg-black/40 z-10"></div>
+
+        <div class="relative z-20 text-center px-4 max-w-5xl">
+            <div class="inline-block bg-nikonYellow text-black px-4 py-1 font-black text-sm mb-6 transform -skew-x-12 animate-bounce">
+                EST. 1917 // OPTICAL LEGACY
+            </div>
+            <h1 class="font-display text-5xl md:text-8xl font-black mb-6 tracking-tighter leading-tight italic">
+                從太空到街頭：<br>
+                <span class="text-nikonYellow animate-glow">Nikon 的「硬漢」浪漫</span>
+            </h1>
+            <p class="text-xl md:text-2xl font-light text-white/90 max-w-3xl mx-auto drop-shadow-lg">
+                解碼百年品牌如何從光學神壇走向大眾街頭，完成一場優雅的華麗轉身。
+            </p>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center animate-bounce">
+            <div class="w-px h-16 bg-gradient-to-b from-nikonYellow to-transparent"></div>
+            <span class="text-[10px] tracking-[0.5em] text-nikonYellow mt-2">SCROLL</span>
+        </div>
+    </header>
+
+    <main class="relative z-10 px-6 py-20 max-w-6xl mx-auto tech-grid">
+        
+        <!-- Intro Quote -->
+        <div class="mb-32 flex flex-col md:flex-row items-center gap-12">
+            <div class="md:w-1/2 glass-panel p-8 anime-border">
+                <p class="text-2xl font-medium leading-relaxed italic border-l-4 border-nikonYellow pl-6">
+                    「在攝影圈的鄙視鏈與愛好鏈中，Nikon 始終像是一個穿著皮夾克、滿臉鬍渣卻眼神深邃的硬漢。他話不多，但當他在零下四十度的極地按下快門時，你就會知道：這傢伙是真的靠得住。」
+                </p>
+                <div class="mt-6 flex items-center justify-end">
+                    <span class="h-px w-12 bg-nikonYellow mr-4"></span>
+                    <span class="font-display font-bold text-nikonYellow">M11318905</span>
+                </div>
+            </div>
+            <div class="md:w-1/2 text-right">
+                <p class="text-lg text-gray-400">
+                    今天，我們不聊枯燥的電路圖，而是要從知性的角度，解碼這個百年品牌。
+                </p>
+            </div>
+        </div>
+
+        <!-- Bento Grid Content -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+            
+            <!-- Section 1: Tough Guy -->
+            <section class="md:col-span-8 glass-panel p-10 hover:border-nikonYellow/50 transition-all duration-500 group">
+                <h2 class="section-title">影像界的「鋼鐵硬漢」</h2>
+                <div class="manga-line mb-8"></div>
+                <p class="text-xl mb-6 text-gray-300">
+                    如果你問一位頭髮花白的老攝影師為什麼堅守 Nikon？他大概會拍拍那台摔過幾次卻依舊運作如常的相機，淡淡地說出三個字：<span class="text-white font-bold underline decoration-nikonYellow">「操不壞」</span>。
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-10">
+                    <div class="space-y-4">
+                        <h4 class="text-nikonYellow font-black flex items-center">
+                            <span class="w-2 h-2 bg-nikonYellow mr-2 rounded-full"></span>
+                            那個「大嘴巴」的遠見
+                        </h4>
+                        <p class="text-sm text-gray-400">
+                            Z 接環直徑達 55mm。這不只是數字，更像是在狹窄巷弄裡開闢了八線道高速公路。
+                        </p>
+                    </div>
+                    <div class="space-y-4">
+                        <h4 class="text-nikonYellow font-black flex items-center">
+                            <span class="w-2 h-2 bg-nikonYellow mr-2 rounded-full"></span>
+                            色彩的立體辯證
+                        </h4>
+                        <p class="text-sm text-gray-400">
+                            追求的不僅是「好看」，而是「真實的立體感」。讓夜拍不再是雜訊掙扎，而是詩意捕捉。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Heritage -->
+            <section class="md:col-span-4 bg-nikonYellow text-black p-10 flex flex-col justify-between transform hover:scale-[1.02] transition-transform">
+                <div>
+                    <h2 class="text-4xl font-black italic leading-none mb-6">HERITAGE<br>傳奇百年</h2>
+                    <p class="font-bold text-sm uppercase tracking-widest opacity-60 mb-8">Est. 1917 Tokyo</p>
+                    <ul class="space-y-6">
+                        <li>
+                            <p class="text-xs uppercase font-black opacity-50">1959 LEGEND</p>
+                            <p class="font-bold">Nikon F 的紀實靈魂</p>
+                        </li>
+                        <li>
+                            <p class="text-xs uppercase font-black opacity-50">NASA PARTNER</p>
+                            <p class="font-bold">凝視銀河的航太血統</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mt-12 text-6xl font-black opacity-10">NIPPON</div>
+            </section>
+
+            <!-- Section 3: Modern Nikon -->
+            <section class="md:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-panel p-8 border-t-4 border-t-neonBlue">
+                    <div class="text-neonBlue text-xs font-black mb-2 uppercase tracking-tighter">Performance</div>
+                    <h3 class="text-2xl font-black mb-4">性能怪獸 Z9 / Z8</h3>
+                    <p class="text-gray-400 text-sm">
+                        3D 追蹤對焦與 8K 內錄影片能力，讓它從原本的靜態王者，一躍成為影視製作的強效引擎。
+                    </p>
+                </div>
+                <div class="glass-panel p-8 border-t-4 border-t-nikonYellow">
+                    <div class="text-nikonYellow text-xs font-black mb-2 uppercase tracking-tighter">Optics</div>
+                    <h3 class="text-2xl font-black mb-4">鏡頭界的「天花板」</h3>
+                    <p class="text-gray-400 text-sm">
+                        S-Line 系列鏡頭被譽為光學極致，其表現公認為目前市面上素質最頂尖的鏡頭群之一。
+                    </p>
+                </div>
+                <div class="glass-panel p-8 border-t-4 border-t-crimsonEdge">
+                    <div class="text-crimsonEdge text-xs font-black mb-2 uppercase tracking-tighter">Style</div>
+                    <h3 class="text-2xl font-black mb-4">復古即正義</h3>
+                    <p class="text-gray-400 text-sm">
+                        Zf 與 Zfc 的爆紅證明了美貌與才華可兼得，將機械外觀與現代數位靈魂完美契合。
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 4: Critiques -->
+            <section class="md:col-span-6 glass-panel p-10 bg-gradient-to-br from-glassBg to-black/40">
+                <h2 class="section-title text-white">攝影包裡的「悄悄話」</h2>
+                <p class="text-gray-400 mb-8 italic">「愛之深，責之切的成長痛」</p>
+                <div class="space-y-6">
+                    <div class="flex gap-4 group">
+                        <div class="text-nikonYellow font-black group-hover:scale-125 transition-transform">01</div>
+                        <div>
+                            <h4 class="font-bold">老鏡頭的黃昏</h4>
+                            <p class="text-xs text-gray-500 mt-1">部分老一代 D 型鏡頭在微單上無法自動對焦，老鐵粉的心碎聲。</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 group">
+                        <div class="text-nikonYellow font-black group-hover:scale-125 transition-transform">02</div>
+                        <div>
+                            <h4 class="font-bold">封閉的交友圈</h4>
+                            <p class="text-xs text-gray-500 mt-1">曾對副廠鏡頭協議感到羞澀，但好在現在已經開始熱情社交。</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 group">
+                        <div class="text-nikonYellow font-black group-hover:scale-125 transition-transform">03</div>
+                        <div>
+                            <h4 class="font-bold">慢工出細活</h4>
+                            <p class="text-xs text-gray-500 mt-1">入門機對焦更新曾慢半拍，追求反應速度的市場考驗著耐心。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Future -->
+            <section class="md:col-span-6 relative overflow-hidden glass-panel p-10 border-l-neonBlue">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-neonBlue/10 blur-3xl rounded-full"></div>
+                <h2 class="section-title" style="color: #00F2FF;">未來預演：漫威化？</h2>
+                <div class="space-y-6 relative z-10">
+                    <div class="bg-black/60 p-4 rounded border border-white/5">
+                        <span class="text-xs font-black bg-neonBlue text-black px-2 py-0.5 rounded mr-2">ACQUISITION</span>
+                        <h4 class="inline font-bold">迎娶 RED 電影機</h4>
+                        <p class="text-xs text-gray-400 mt-2">整合 RED 的色彩科學與 Raw 格式，強攻高端影視製作市場。</p>
+                    </div>
+                    <div class="bg-black/60 p-4 rounded border border-white/5">
+                        <span class="text-xs font-black bg-neonBlue text-black px-2 py-0.5 rounded mr-2">ARTIFICIAL INTELLIGENCE</span>
+                        <h4 class="inline font-bold">AI 攝影管家</h4>
+                        <p class="text-xs text-gray-400 mt-2">不只能自動抓拍，還能優化工作導流，讓攝影在智慧化浪潮中進化。</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Conclusion -->
+        <footer class="mt-32 text-center">
+            <div class="manga-line w-24 mx-auto mb-10"></div>
+            <p class="text-3xl md:text-5xl font-black tracking-tight mb-8">
+                影像不只是光電信號的轉換，<br>
+                更是對真實與極致的<span class="text-nikonYellow">永恆追求</span>。
+            </p>
+            <div class="inline-flex items-center gap-4 text-gray-500 text-sm tracking-widest uppercase">
+                <span>Hardcore</span>
+                <span class="w-2 h-2 rounded-full bg-nikonYellow"></span>
+                <span>Romantic</span>
+                <span class="w-2 h-2 rounded-full bg-nikonYellow"></span>
+                <span>Nikon DNA</span>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Floating Decorations -->
+    <div class="fixed top-20 right-10 opacity-10 pointer-events-none select-none z-0">
+        <div class="text-[12rem] font-black leading-none transform rotate-90">NIKON</div>
+    </div>
+    
+    <div class="fixed bottom-20 left-10 opacity-10 pointer-events-none select-none z-0">
+        <div class="w-64 h-64 border-[40px] border-nikonYellow rounded-full"></div>
+    </div>
+
+</body>
+</html>
+
