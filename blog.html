@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深夜食堂：蔥香手撕雞拌麵 | Midnight Izakaya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@600;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#0D0D0D',
+                        midnight: '#121212',
+                        amber: {
+                            light: '#FFD700',
+                            DEFAULT: '#FFBF00',
+                            dark: '#CC9900',
+                        },
+                        charcoal: '#1A1A1A',
+                        slate: '#262626'
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                        serif: ['"Noto Serif TC"', 'serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0D0D0D;
+            color: #E5E7EB;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 191, 0, 0.1);
+        }
+        .text-glow {
+            text-shadow: 0 0 15px rgba(255, 191, 0, 0.3);
+        }
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #FFBF00;
+            border-radius: 10px;
+        }
+        .btn-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(255, 191, 0, 0.5);
+        }
+        .recipe-step-hover:hover .step-number {
+            color: #FFBF00;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-amber selection:text-black">
+
+    <!-- Floating Action Button -->
+    <div class="fixed bottom-8 right-8 z-50 flex flex-col gap-4">
+        <button onclick="window.print()" class="w-14 h-14 bg-amber rounded-full flex items-center justify-center text-black shadow-lg btn-hover group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            <span class="absolute right-16 bg-midnight text-amber text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-amber/30">列印食譜</span>
+        </button>
+        <button class="w-14 h-14 bg-midnight border-2 border-amber rounded-full flex items-center justify-center text-amber shadow-lg btn-hover group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
+            <span class="absolute right-16 bg-midnight text-amber text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-amber/30">分享美食</span>
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex flex-col lg:flex-row items-center justify-center p-6 lg:p-12 gap-12 overflow-hidden">
+        <!-- Background Ambience -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
+            <div class="absolute top-1/4 -left-20 w-96 h-96 bg-amber/20 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-amber/10 rounded-full blur-[120px]"></div>
+        </div>
+
+        <!-- Recipe Title (Vertical on Desktop) -->
+        <div class="z-10 order-2 lg:order-1 flex flex-col items-center lg:items-start">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="h-px w-12 bg-amber"></span>
+                <p class="text-amber font-medium tracking-[0.3em] uppercase">Midnight Snack</p>
+            </div>
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl text-white leading-tight lg:vertical-text tracking-tighter mb-8 text-glow">
+                深夜療癒系<br class="hidden lg:block">蔥香手撕雞拌麵
+            </h1>
+            <p class="text-gray-400 font-light max-w-xs text-center lg:text-left leading-relaxed">
+                誰說宵夜只能將就？給自己一頓充滿儀式感的深夜療癒吧。
+            </p>
+        </div>
+
+        <!-- Video Centerpiece -->
+        <div class="z-10 order-1 lg:order-2 relative group">
+            <div class="relative w-[280px] md:w-[320px] lg:w-[380px] aspect-[9/16] rounded-[2.5rem] p-3 bg-gradient-to-b from-gray-800 to-black shadow-2xl border border-white/10 overflow-hidden">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black rounded-b-2xl z-20"></div>
+                <div class="relative h-full w-full overflow-hidden rounded-[2rem]">
+                    <video 
+                        src='https://opal.google/board/blobs/9827ea06-515a-4ae9-8fe2-6b2508e93f5d' 
+                        class="w-full h-full object-cover"
+                        autoplay 
+                        muted 
+                        loop 
+                        playsinline
+                    ></video>
+                    <!-- Video Overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full border-2 border-amber overflow-hidden bg-charcoal">
+                                <div class="w-full h-full flex items-center justify-center font-serif text-amber italic">C</div>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-white">Creative Chef</p>
+                                <p class="text-[10px] text-gray-300">Live Culinary Art</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Decorative Elements -->
+            <div class="absolute -z-10 -bottom-6 -right-6 w-full h-full border-2 border-amber/20 rounded-[2.5rem] translate-x-4 translate-y-4"></div>
+        </div>
+    </section>
+
+    <!-- Recipe Details -->
+    <section class="max-w-7xl mx-auto px-6 py-24">
+        <div class="grid lg:grid-cols-12 gap-12">
+            
+            <!-- Ingredients (Column 1) -->
+            <div class="lg:col-span-5">
+                <div class="glass-card p-8 md:p-12 rounded-[2rem] sticky top-12">
+                    <div class="flex items-center gap-4 mb-10">
+                        <svg class="w-8 h-8 text-amber" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-10.03C11.34 11.84 13 10.12 13 8V2h-2v7zm5-3v8h2.5v8h2.5V2c-2.76 0-5 2.24-5 4z"/>
+                        </svg>
+                        <h2 class="font-serif text-3xl text-white">食材內容 <span class="text-amber text-lg block font-sans tracking-widest mt-1">INGREDIENTS</span></h2>
+                    </div>
+                    <ul class="space-y-6">
+                        <li class="flex items-center gap-4 group">
+                            <span class="w-2 h-2 rotate-45 bg-amber group-hover:scale-150 transition-transform"></span>
+                            <span class="text-lg text-gray-200">帶骨燻雞/烤雞（手撕成絲）</span>
+                        </li>
+                        <li class="flex items-center gap-4 group">
+                            <span class="w-2 h-2 rotate-45 bg-amber group-hover:scale-150 transition-transform"></span>
+                            <span class="text-lg text-gray-200">麵條（細麵或拉麵）</span>
+                        </li>
+                        <li class="flex items-center gap-4 group">
+                            <span class="w-2 h-2 rotate-45 bg-amber group-hover:scale-150 transition-transform"></span>
+                            <span class="text-lg text-gray-200">新鮮青蔥、蒜末</span>
+                        </li>
+                        <li class="flex items-center gap-4 group">
+                            <span class="w-2 h-2 rotate-45 bg-amber group-hover:scale-150 transition-transform"></span>
+                            <span class="text-lg text-gray-200">特製醬料（醬油、烏醋、香油）</span>
+                        </li>
+                        <li class="flex items-center gap-4 group">
+                            <span class="w-2 h-2 rotate-45 bg-amber group-hover:scale-150 transition-transform"></span>
+                            <span class="text-lg text-gray-200">白芝麻</span>
+                        </li>
+                    </ul>
+
+                    <div class="mt-12 p-6 rounded-2xl bg-amber/5 border border-amber/20">
+                        <p class="text-amber text-sm font-medium mb-2">主廚小撇步：</p>
+                        <p class="text-gray-400 text-sm leading-relaxed italic">
+                            香油一定要加熱至微微冒煙再淋上蔥蒜，這道手撕麵的「靈魂」就在於熱油激發出的辛辣香氣。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Steps (Column 2) -->
+            <div class="lg:col-span-7 space-y-8">
+                <div class="mb-10 pl-4 border-l-4 border-amber">
+                    <h2 class="font-serif text-3xl text-white uppercase tracking-wider">烹飪步驟</h2>
+                    <p class="text-amber text-sm mt-1">THE CRAFTING PROCESS</p>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Step 1 -->
+                    <div class="recipe-step-hover flex gap-6 p-8 rounded-2xl border border-white/5 bg-white/5 transition-all duration-300">
+                        <span class="step-number text-4xl font-serif text-white/20 transition-all duration-300">01</span>
+                        <div>
+                            <h3 class="text-xl font-bold text-amber mb-2">剝骨取肉</h3>
+                            <p class="text-gray-300 leading-relaxed">將帶骨熟雞肉去骨，保留帶有油脂與香氣的雞皮，將雞肉順著紋理手撕成適合入口的條狀備用。</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="recipe-step-hover flex gap-6 p-8 rounded-2xl border border-white/5 bg-white/5 transition-all duration-300">
+                        <span class="step-number text-4xl font-serif text-white/20 transition-all duration-300">02</span>
+                        <div>
+                            <h3 class="text-xl font-bold text-amber mb-2">調製醬汁</h3>
+                            <p class="text-gray-300 leading-relaxed">準備一個大碗，放入蒜末、一半的蔥花、醬油與烏醋。將香油加熱至微微冒煙後，淋在蔥蒜上爆香，攪拌均勻。</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="recipe-step-hover flex gap-6 p-8 rounded-2xl border border-white/5 bg-white/5 transition-all duration-300">
+                        <span class="step-number text-4xl font-serif text-white/20 transition-all duration-300">03</span>
+                        <div>
+                            <h3 class="text-xl font-bold text-amber mb-2">烹煮麵條</h3>
+                            <p class="text-gray-300 leading-relaxed">燒一鍋滾水，將麵條下鍋煮至彈牙，撈起瀝乾水分。</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="recipe-step-hover flex gap-6 p-8 rounded-2xl border border-white/5 bg-white/5 transition-all duration-300">
+                        <span class="step-number text-4xl font-serif text-white/20 transition-all duration-300">04</span>
+                        <div>
+                            <h3 class="text-xl font-bold text-amber mb-2">攪拌入味</h3>
+                            <p class="text-gray-300 leading-relaxed">將熱騰騰的麵條放入裝有醬汁的大碗中迅速拌勻，讓每根麵條都均勻裹上蔥油香氣。</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div class="recipe-step-hover flex gap-6 p-8 rounded-2xl border border-white/5 bg-white/5 transition-all duration-300">
+                        <span class="step-number text-4xl font-serif text-white/20 transition-all duration-300">05</span>
+                        <div>
+                            <h3 class="text-xl font-bold text-amber mb-2">盛盤上桌</h3>
+                            <p class="text-gray-300 leading-relaxed">將拌好的麵條盛入碗中，鋪上金黃燻雞絲，最後撒上剩餘的蔥花與白芝麻即可。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Media Spotlight (IG Mockup) -->
+    <section class="max-w-6xl mx-auto px-6 py-24">
+        <div class="bg-charcoal rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row">
+            <!-- IG Image -->
+            <div class="md:w-1/2 aspect-square relative group overflow-hidden">
+                <img src='https://opal.google/board/blobs/82378d1d-c8c3-4000-b5ea-eacb695f6180' alt='media_1' class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                </div>
+            </div>
+            <!-- IG Content -->
+            <div class="md:w-1/2 p-10 flex flex-col justify-between bg-slate">
+                <div>
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full p-0.5 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600">
+                                <div class="w-full h-full rounded-full border-2 border-slate overflow-hidden bg-charcoal flex items-center justify-center font-serif text-amber italic">C</div>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold leading-none">creative_chef_studio</h4>
+                                <p class="text-gray-400 text-xs mt-1">台北市 · 深夜食堂</p>
+                            </div>
+                        </div>
+                        <button class="bg-amber text-black px-4 py-1.5 rounded-lg text-sm font-bold btn-hover">追蹤</button>
+                    </div>
+
+                    <div class="custom-scrollbar overflow-y-auto max-h-[300px] pr-4 text-gray-200 space-y-4">
+                        <p class="leading-relaxed">夜深了，肚子是不是又開始不安分了呢？🌙✨</p>
+                        <p class="leading-relaxed">今天來點不一樣的 <span class="text-amber">#深夜食堂</span>！不需要複雜的廚藝，只要利用冰箱裡現有的美味，短短 10 分鐘，就能把日常小吃變身為星級宵夜。</p>
+                        <p class="leading-relaxed">看看這金黃油亮的表皮、鮮嫩多汁的肉質🤤！只需純手工去骨、撕成肉絲，搭配特製的銷魂蔥油醬汁與彈牙麵條，一碗香氣四溢的「蔥香手撕雞拌麵」完美誕生🍜。肉汁的鹹香與蔥油的層次在口中交織，絕對是撫慰一天疲憊的最佳解答。</p>
+                        <p class="leading-relaxed font-medium">誰說宵夜只能將就？給自己一頓充滿儀式感的深夜療癒吧！💛</p>
+                        <p class="text-gray-400">👇 留言告訴我們，你最無法抗拒的宵夜是什麼？</p>
+                        <p class="text-amber-light text-sm">#深夜食堂 #宵夜推薦 #宵夜文 #手撕雞 #懶人料理 #快速食譜 #食譜分享 #自家製 #台灣美食 #麵食控 #美食攝影 #IGFoodie #FoodPorn #深夜放毒</p>
+                    </div>
+                </div>
+
+                <div class="pt-8 border-t border-white/10 mt-8">
+                    <div class="flex gap-4 mb-3">
+                        <svg class="w-6 h-6 text-white cursor-pointer hover:text-amber transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        <svg class="w-6 h-6 text-white cursor-pointer hover:text-amber transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                        <svg class="w-6 h-6 text-white cursor-pointer hover:text-amber transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                    </div>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest font-medium">Liked by midnight_foodie and 1,284 others</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sign-off Section (Minimalist Chef Persona) -->
+    <div class="py-20 text-center border-t border-white/5">
+        <div class="font-serif text-3xl italic text-amber-light mb-4">Creative Chef</div>
+        <div class="flex justify-center gap-6">
+            <a href="#" class="text-gray-500 hover:text-amber transition-colors">
+                <span class="sr-only">Facebook</span>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="#" class="text-gray-500 hover:text-amber transition-colors">
+                <span class="sr-only">YouTube</span>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Optional: Intersection Observer for auto-playing video on scroll
+        const video = document.querySelector('video');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    video.play();
+                } else {
+                    video.pause();
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(video);
+    </script>
+</body>
+</html>
