@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>展新不動產估價師事務所</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --ink:    #1a1810;
+  --smoke:  #2c2820;
+  --gold:   #b8922a;
+  --goldL:  #d4a94a;
+  --goldXL: #e8c96a;
+  --cream:  #f5f0e8;
+  --paper:  #faf7f2;
+  --linen:  #ede8df;
+  --gray:   #7a7468;
+  --grayL:  #b0a898;
+  --white:  #ffffff;
+  --r:      0.2rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'Noto Serif TC', 'Noto Sans TC', serif;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: hidden;
+  line-height: 1.8;
+}
+
+/* ─── TYPOGRAPHY ──────────────────────────────────────────── */
+.en { font-family: 'Cormorant Garamond', serif; letter-spacing: 0.08em; }
+h1,h2,h3 { font-family: 'Noto Serif TC', serif; font-weight: 700; line-height: 1.4; }
+
+/* ─── NAV ──────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5vw;
+  height: 72px;
+  background: rgba(250,247,242,0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(184,146,42,0.18);
+  transition: box-shadow 0.3s;
+}
+nav.scrolled { box-shadow: 0 2px 24px rgba(26,24,16,0.08); }
+
+.nav-logo {
+  display: flex; align-items: center; gap: 0.9rem;
+  text-decoration: none;
+}
+.nav-logo-mark {
+  width: 38px; height: 38px;
+  background: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+.nav-logo-mark::after {
+  content: '展'; color: var(--goldL); font-size: 18px; font-weight: 900;
+  font-family: 'Noto Serif TC', serif;
+}
+.nav-logo-text { line-height: 1.25; }
+.nav-logo-text .cn { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: 0.05em; }
+.nav-logo-text .en-sub { font-size: 10px; color: var(--gray); letter-spacing: 0.15em; font-family: 'Cormorant Garamond', serif; }
+
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  text-decoration: none; color: var(--smoke); font-size: 13.5px;
+  font-weight: 500; letter-spacing: 0.08em; position: relative;
+  transition: color 0.25s;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+  height: 1px; background: var(--gold); transform: scaleX(0);
+  transform-origin: left; transition: transform 0.3s;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-links a:hover::after { transform: scaleX(1); }
+
+.nav-cta {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 9px 22px; background: var(--ink); color: var(--goldL) !important;
+  font-size: 13px !important; letter-spacing: 0.12em !important;
+  border: none; text-decoration: none; transition: background 0.25s, transform 0.2s;
+}
+.nav-cta:hover { background: var(--smoke); transform: translateY(-1px); }
+.nav-cta::after { display: none !important; }
+
+/* ─── HERO ──────────────────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: grid; grid-template-columns: 1fr 1fr;
+  padding-top: 72px;
+  overflow: hidden;
+}
+.hero-left {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 8vh 5vw 8vh 8vw;
+  background: var(--paper);
+  position: relative;
+}
+.hero-left::before {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0;
+  width: 4px; background: linear-gradient(to bottom, transparent, var(--gold) 30%, var(--gold) 70%, transparent);
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 0.8rem;
+  font-size: 11px; color: var(--gold); letter-spacing: 0.25em;
+  text-transform: uppercase; font-family: 'Cormorant Garamond', serif;
+  margin-bottom: 1.8rem; opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+}
+.hero-eyebrow::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--gold); }
+
+.hero h1 {
+  font-size: clamp(2.6rem, 4.5vw, 4rem);
+  line-height: 1.25; color: var(--ink);
+  opacity: 0; animation: fadeUp 0.8s 0.35s forwards;
+}
+.hero h1 .gold { color: var(--gold); }
+.hero h1 .en-title {
+  display: block; font-family: 'Cormorant Garamond', serif;
+  font-size: 0.55em; font-weight: 300; color: var(--gray);
+  letter-spacing: 0.15em; margin-top: 0.4rem;
+}
+
+.hero-desc {
+  margin-top: 2rem; max-width: 480px;
+  font-size: 15px; color: var(--gray); line-height: 1.9;
+  opacity: 0; animation: fadeUp 0.8s 0.5s forwards;
+}
+
+.hero-stats {
+  display: flex; gap: 3rem; margin-top: 3.5rem;
+  opacity: 0; animation: fadeUp 0.8s 0.65s forwards;
+}
+.stat { border-left: 2px solid var(--goldL); padding-left: 1.2rem; }
+.stat-num { font-size: 2.2rem; font-weight: 700; color: var(--ink); line-height: 1; font-family: 'Cormorant Garamond', serif; }
+.stat-num span { font-size: 1rem; color: var(--gold); margin-left: 2px; }
+.stat-label { font-size: 12px; color: var(--gray); letter-spacing: 0.1em; margin-top: 4px; }
+
+.hero-actions {
+  display: flex; align-items: center; gap: 1.5rem;
+  margin-top: 3rem; opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 14px 32px; background: var(--gold); color: var(--ink);
+  font-size: 13.5px; font-weight: 700; letter-spacing: 0.12em;
+  text-decoration: none; transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+  box-shadow: 0 4px 16px rgba(184,146,42,0.25);
+}
+.btn-primary:hover { background: var(--goldL); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,146,42,0.35); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 14px 24px; border: 1.5px solid var(--ink); color: var(--ink);
+  font-size: 13.5px; letter-spacing: 0.1em; text-decoration: none;
+  transition: all 0.25s;
+}
+.btn-ghost:hover { background: var(--ink); color: var(--goldL); }
+
+.hero-right {
+  position: relative; overflow: hidden;
+  background: var(--ink);
+}
+.hero-bg-img {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(160deg, rgba(14,13,10,0.70) 0%, rgba(26,24,16,0.45) 55%, rgba(20,18,12,0.72) 100%),
+    url('https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+}
+.hero-grid-lines {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(184,146,42,0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(184,146,42,0.06) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.hero-accent-circle {
+  position: absolute; top: -80px; right: -80px;
+  width: 360px; height: 360px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(184,146,42,0.12) 0%, transparent 70%);
+}
+.hero-badge-wrap-legacy { display: none; }
+.hero-badge-main {
+  position: relative; text-align: center;
+}
+.hero-badge-main .big-zh {
+  font-size: clamp(4rem, 8vw, 7rem); font-weight: 900;
+  color: rgba(232,201,106,0.12); line-height: 1;
+  font-family: 'Noto Serif TC', serif; letter-spacing: -0.02em;
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  white-space: nowrap; pointer-events: none;
+}
+/* hero-brand-block 簡潔排版 — 左下角品牌印記 */
+.hero-badge-wrap {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: flex-end;
+  padding: 0 2.8rem 3rem;
+  gap: 0;
+}
+.hero-brand-block {
+  display: flex; flex-direction: column; align-items: flex-start;
+  text-align: left; gap: 0.9rem;
+}
+.hero-brand-rule {
+  width: 36px; height: 1px;
+  background: linear-gradient(to right, var(--gold), transparent);
+}
+.hero-brand-zh {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(1.25rem, 1.9vw, 1.7rem); font-weight: 700;
+  color: #ffffff; line-height: 1.45; letter-spacing: 0.05em;
+  text-shadow: none;
+  -webkit-font-smoothing: antialiased;
+}
+.hero-brand-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px; letter-spacing: 0.22em;
+  color: rgba(232,201,106,0.95); line-height: 1.8;
+  text-transform: uppercase;
+  text-shadow: none;
+  -webkit-font-smoothing: antialiased;
+}
+.hero-brand-chips {
+  display: flex; gap: 0.6rem; flex-wrap: wrap;
+  margin-top: 0.3rem;
+}
+.hero-brand-chip {
+  padding: 4px 12px;
+  border: 1px solid rgba(184,146,42,0.45);
+  font-size: 10px; color: rgba(232,201,106,0.85);
+  letter-spacing: 0.12em; font-family: 'Cormorant Garamond', serif;
+  background: rgba(0,0,0,0.25);
+}
+
+/* ─── MARQUEE ────────────────────────────────────────────────── */
+.marquee-bar {
+  background: var(--ink); padding: 14px 0; overflow: hidden;
+  border-top: 1px solid rgba(184,146,42,0.2);
+  border-bottom: 1px solid rgba(184,146,42,0.2);
+}
+.marquee-inner {
+  display: flex; gap: 0; white-space: nowrap;
+  animation: marqueeAnim 30s linear infinite;
+}
+.marquee-item {
+  display: inline-flex; align-items: center; gap: 1.5rem;
+  padding: 0 2rem; font-size: 12px; color: rgba(232,201,106,0.6);
+  letter-spacing: 0.2em; font-family: 'Cormorant Garamond', serif;
+}
+.marquee-item::after { content: '✦'; color: var(--gold); font-size: 10px; }
+
+/* ─── SECTION COMMONS ─────────────────────────────────────────── */
+section { padding: 100px 0; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 6vw; }
+
+.section-label {
+  display: inline-flex; align-items: center; gap: 0.8rem;
+  font-size: 11px; color: var(--gold); letter-spacing: 0.3em;
+  text-transform: uppercase; font-family: 'Cormorant Garamond', serif;
+  margin-bottom: 1.2rem;
+}
+.section-label::before { content: ''; display: inline-block; width: 28px; height: 1px; background: var(--gold); }
+.section-title { font-size: clamp(1.8rem, 3vw, 2.6rem); color: var(--ink); line-height: 1.3; }
+.section-sub { font-size: 14.5px; color: var(--gray); line-height: 1.9; margin-top: 1rem; }
+
+/* ─── ABOUT ──────────────────────────────────────────────────── */
+.about { background: var(--paper); }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7vw; align-items: center; }
+.about-img-wrap { position: relative; }
+.about-img-block {
+  width: 100%; padding-top: 125%;
+  background:
+    linear-gradient(160deg, rgba(26,24,16,0.55) 0%, rgba(26,24,16,0.30) 60%, rgba(44,40,32,0.70) 100%),
+    url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
+  position: relative; overflow: hidden;
+}
+.about-img-block::after {
+  content: '不動產\n估價';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 4rem; font-weight: 900; color: rgba(232,201,106,0.07);
+  white-space: pre; text-align: center; line-height: 1.3;
+  font-family: 'Noto Serif TC', serif;
+}
+.about-img-deco {
+  position: absolute; bottom: -20px; right: -20px;
+  width: 60%; padding-top: 60%;
+  border: 2px solid var(--gold);
+  opacity: 0.3;
+}
+.about-img-num {
+  position: absolute; top: -16px; left: -16px;
+  background: var(--gold); color: var(--ink);
+  font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600;
+  padding: 10px 18px; letter-spacing: 0.05em;
+}
+.about-content .section-title { margin-bottom: 1.5rem; }
+.about-body { font-size: 15px; color: var(--gray); line-height: 2; margin-bottom: 2rem; }
+.about-features { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; margin-top: 2rem; }
+.about-features li {
+  display: flex; align-items: flex-start; gap: 0.9rem;
+  font-size: 14.5px; color: var(--smoke);
+}
+.feature-dot {
+  flex-shrink: 0; width: 20px; height: 20px; margin-top: 2px;
+  border: 1.5px solid var(--gold); display: flex; align-items: center; justify-content: center;
+}
+.feature-dot::after { content: ''; width: 6px; height: 6px; background: var(--gold); }
+
+/* ─── SERVICES ───────────────────────────────────────────────── */
+.services { background: var(--linen); }
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; margin-top: 3.5rem; background: rgba(184,146,42,0.15); }
+.service-card {
+  background: var(--paper); padding: 2.5rem 2rem;
+  position: relative; overflow: hidden; cursor: default;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.service-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(26,24,16,0.12); z-index: 1; }
+.service-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+}
+.service-card:hover::before { transform: scaleX(1); }
+.service-num { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: rgba(184,146,42,0.15); line-height: 1; position: absolute; top: 1.5rem; right: 1.5rem; }
+.service-icon { font-size: 2rem; margin-bottom: 1.2rem; }
+.service-card h3 { font-size: 1.15rem; color: var(--ink); margin-bottom: 0.8rem; line-height: 1.5; }
+.service-card p { font-size: 13.5px; color: var(--gray); line-height: 1.9; }
+.service-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem; }
+.tag { padding: 3px 10px; border: 1px solid rgba(184,146,42,0.35); font-size: 11px; color: var(--gold); letter-spacing: 0.08em; }
+
+/* ─── PROCESS ────────────────────────────────────────────────── */
+.process { background: var(--ink); }
+.process .section-label { color: var(--goldL); }
+.process .section-label::before { background: var(--goldL); }
+.process .section-title { color: var(--paper); }
+.process .section-sub { color: var(--grayL); }
+.process-steps {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 0; margin-top: 4rem; position: relative;
+}
+.process-steps::before {
+  content: ''; position: absolute; top: 38px; left: 10%; right: 10%;
+  height: 1px; background: linear-gradient(to right, transparent, rgba(184,146,42,0.4) 20%, rgba(184,146,42,0.4) 80%, transparent);
+}
+.step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 0.8rem; }
+.step-num {
+  width: 76px; height: 76px;
+  border: 1px solid rgba(184,146,42,0.4); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--smoke); position: relative; z-index: 1; margin-bottom: 1.5rem;
+  transition: background 0.3s, border-color 0.3s;
+}
+.step:hover .step-num { background: rgba(184,146,42,0.15); border-color: var(--goldL); }
+.step-num span {
+  font-family: 'Cormorant Garamond', serif; font-size: 1.6rem;
+  color: var(--goldL); font-weight: 400; letter-spacing: 0.05em;
+}
+.step h4 { font-size: 14px; color: var(--paper); font-weight: 700; margin-bottom: 0.6rem; letter-spacing: 0.05em; }
+.step p { font-size: 12px; color: var(--grayL); line-height: 1.7; }
+
+/* ─── EXPERTISE ──────────────────────────────────────────────── */
+.expertise { background: var(--paper); }
+.expertise-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 6vw; align-items: start; }
+.expertise-left { position: sticky; top: 120px; }
+.expertise-right { display: flex; flex-direction: column; gap: 1px; background: rgba(184,146,42,0.12); }
+.exp-item {
+  background: var(--paper); padding: 1.8rem 2rem;
+  display: flex; align-items: flex-start; gap: 1.5rem;
+  cursor: default; transition: background 0.25s;
+  border-left: 3px solid transparent;
+  transition: all 0.25s;
+}
+.exp-item:hover { background: var(--linen); border-left-color: var(--gold); }
+.exp-icon { flex-shrink: 0; font-size: 1.6rem; padding-top: 2px; }
+.exp-item h4 { font-size: 1rem; color: var(--ink); margin-bottom: 0.4rem; }
+.exp-item p { font-size: 13.5px; color: var(--gray); line-height: 1.8; }
+
+/* ─── CASES / CLIENTS ─────────────────────────────────────────── */
+.cases { background: var(--linen); }
+.cases-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; margin-top: 3rem; }
+.case-card {
+  background: var(--paper); padding: 2rem 1.6rem;
+  border-bottom: 3px solid var(--linen);
+  transition: border-color 0.25s, transform 0.25s;
+  cursor: default;
+}
+.case-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+.case-cat { font-size: 11px; color: var(--gold); letter-spacing: 0.2em; margin-bottom: 0.8rem; font-family: 'Cormorant Garamond', serif; }
+.case-card h4 { font-size: 0.95rem; color: var(--ink); font-weight: 700; margin-bottom: 0.6rem; line-height: 1.5; }
+.case-card p { font-size: 13px; color: var(--gray); line-height: 1.8; }
+
+.clients-row {
+  display: flex; flex-wrap: wrap; gap: 1px; margin-top: 3.5rem;
+  background: rgba(184,146,42,0.15);
+}
+.client-badge {
+  flex: 1 1 150px; min-height: 72px;
+  background: var(--paper);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13.5px; color: var(--gray); letter-spacing: 0.05em;
+  font-weight: 500; transition: background 0.25s, color 0.25s;
+  padding: 0 1rem; text-align: center;
+}
+.client-badge:hover { background: var(--ink); color: var(--goldL); }
+
+/* ─── TEAM ───────────────────────────────────────────────────── */
+.team { background: var(--paper); }
+.team-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; margin-top: 3.5rem; }
+.team-card { position: relative; overflow: hidden; }
+.team-photo {
+  width: 100%; padding-top: 90%;
+  background: linear-gradient(135deg, #2c2820, #1a1810);
+  position: relative; overflow: hidden;
+}
+.team-photo-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(26,24,16,0.85) 0%, transparent 60%);
+  display: flex; align-items: flex-end; justify-content: flex-start;
+  padding: 1.5rem;
+}
+.team-photo-num {
+  position: absolute; top: 1rem; right: 1rem;
+  font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300;
+  color: rgba(232,201,106,0.1); line-height: 1;
+}
+.team-info-overlay { }
+.team-info-overlay .role { font-size: 11px; color: var(--goldL); letter-spacing: 0.18em; margin-bottom: 0.4rem; font-family: 'Cormorant Garamond', serif; }
+.team-info-overlay .name { font-size: 1.2rem; font-weight: 700; color: var(--paper); }
+.team-body { padding: 1.5rem 0; }
+.team-body p { font-size: 13.5px; color: var(--gray); line-height: 1.8; margin-bottom: 0.8rem; }
+.team-certs { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.cert-tag { padding: 2px 10px; background: var(--linen); font-size: 11px; color: var(--smoke); letter-spacing: 0.05em; }
+
+/* ─── CONTACT ────────────────────────────────────────────────── */
+/* ─── MARKET REPORT ───────────────────────────────────────────── */
+.market-report {
+  background: linear-gradient(170deg, #0f0e0c 0%, #1a1810 50%, #131210 100%);
+  padding: 100px 0;
+  position: relative;
+  overflow: hidden;
+}
+.market-report::before {
+  content: '季報';
+  position: absolute; top: -20px; right: -40px;
+  font-size: 30vw; font-weight: 900;
+  color: rgba(184,146,42,0.025);
+  font-family: 'Noto Serif TC', serif;
+  line-height: 1; pointer-events: none; user-select: none;
+}
+
+.mr-header { margin-bottom: 3.5rem; }
+.mr-header .section-label::before { background: var(--goldL); }
+
+/* Stats Row */
+.mr-stats-row {
+  display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  align-items: center;
+  background: rgba(184,146,42,0.07);
+  border: 1px solid rgba(184,146,42,0.15);
+  padding: 2.5rem 3rem;
+  margin-bottom: 3.5rem;
+  gap: 0;
+}
+.mr-stat { text-align: center; }
+.mr-stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 600; color: var(--goldL); line-height: 1;
+}
+.mr-unit { font-size: 0.45em; color: var(--gold); margin-left: 3px; }
+.mr-stat-label { font-size: 12px; color: var(--grayL); letter-spacing: 0.08em; margin: 6px 0 8px; }
+.mr-stat-badge {
+  display: inline-block;
+  font-size: 11px; letter-spacing: 0.1em;
+  padding: 3px 10px; border-radius: 2px;
+  font-family: 'Cormorant Garamond', serif;
+}
+.mr-stat-badge.up { background: rgba(80,180,100,0.15); color: #5fb87a; border: 1px solid rgba(80,180,100,0.3); }
+.mr-stat-badge.down { background: rgba(200,80,80,0.15); color: #d47070; border: 1px solid rgba(200,80,80,0.3); }
+.mr-stat-badge.neutral { background: rgba(184,146,42,0.12); color: var(--goldL); border: 1px solid rgba(184,146,42,0.25); }
+.mr-stat-divider { width: 1px; height: 70px; background: rgba(184,146,42,0.2); margin: 0 2rem; }
+
+/* Parts */
+.mr-parts { display: flex; flex-direction: column; gap: 2px; }
+.mr-part {
+  border: 1px solid rgba(184,146,42,0.18);
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.mr-part.active { border-color: rgba(184,146,42,0.4); }
+
+.mr-part-header {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr auto;
+  align-items: center; gap: 1.5rem;
+  padding: 1.6rem 2rem;
+  cursor: pointer;
+  background: rgba(184,146,42,0.04);
+  transition: background 0.25s;
+}
+.mr-part-header:hover { background: rgba(184,146,42,0.09); }
+.mr-part.active .mr-part-header { background: rgba(184,146,42,0.1); }
+
+.mr-part-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.8rem; font-weight: 300;
+  color: rgba(184,146,42,0.3); line-height: 1;
+}
+.mr-part.active .mr-part-num { color: var(--goldL); }
+.mr-part-title .mr-part-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px; letter-spacing: 0.25em; color: var(--gold);
+  text-transform: uppercase;
+}
+.mr-part-title .mr-part-zh {
+  font-size: 1.3rem; font-weight: 700; color: var(--paper); margin-top: 2px;
+}
+.mr-part-sub { font-size: 12.5px; color: var(--grayL); letter-spacing: 0.05em; }
+.mr-part-toggle {
+  font-size: 1.5rem; color: var(--goldL);
+  transition: transform 0.35s; width: 32px; text-align: center;
+}
+.mr-part.active .mr-part-toggle { transform: rotate(45deg); }
+
+/* Body */
+.mr-part-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.55s cubic-bezier(0.4,0,0.2,1);
+  padding: 0 2rem;
+}
+.mr-part.active .mr-part-body {
+  max-height: 2000px;
+  padding: 0 2rem 2rem;
+}
+
+/* Insight Grid */
+.mr-insight-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2rem; padding-top: 1.5rem;
+}
+.mr-insight.full-width { grid-column: 1 / -1; }
+.mr-insight {
+  display: flex; gap: 1rem; align-items: flex-start;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(184,146,42,0.1);
+  padding: 1.4rem;
+}
+.mr-insight h4 {
+  font-size: 13.5px; font-weight: 700; color: var(--goldL);
+  letter-spacing: 0.08em; margin-bottom: 1rem;
+}
+.mr-insight-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+
+/* City bars */
+.mr-city-bars { display: flex; flex-direction: column; gap: 0.5rem; }
+.mr-city-bar { display: flex; align-items: center; gap: 0.7rem; font-size: 12px; }
+.mr-city-bar .city { width: 50px; color: var(--grayL); text-align: right; flex-shrink: 0; }
+.bar-wrap { flex: 1; }
+.bar { padding: 3px 8px; font-size: 11px; font-family: 'Cormorant Garamond', serif; letter-spacing: 0.05em; white-space: nowrap; display: inline-block; }
+.bar.up { background: rgba(80,180,100,0.2); color: #6eca87; }
+.bar.down { background: rgba(200,80,80,0.2); color: #d47070; }
+
+/* District list */
+.mr-district-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.mr-district-item { display: flex; align-items: center; gap: 0.7rem; font-size: 12.5px; }
+.mr-district-item .rank { width: 22px; font-family: 'Cormorant Garamond', serif; font-weight: 600; color: var(--grayL); flex-shrink: 0; }
+.mr-district-item .rank.gold { color: var(--gold); }
+.mr-district-item .dname { width: 50px; color: var(--paper); }
+.mr-district-item .dval { width: 45px; color: var(--goldL); font-family: 'Cormorant Garamond', serif; }
+.mr-district-item .dtag { font-size: 11px; color: var(--grayL); background: rgba(184,146,42,0.08); padding: 2px 8px; }
+
+/* Bullets */
+.mr-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.mr-bullets li { font-size: 13.5px; color: var(--grayL); line-height: 1.75; padding-left: 1.2rem; position: relative; }
+.mr-bullets li::before { content: '—'; position: absolute; left: 0; color: var(--gold); }
+
+/* Price Ladder */
+.mr-price-ladder { display: flex; flex-direction: column; gap: 0; }
+.mr-price-rung {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 14px;
+  border-left: 3px solid rgba(184,146,42,0.15);
+  font-size: 13px;
+}
+.mr-price-rung.top { border-left-color: var(--gold); background: rgba(184,146,42,0.08); }
+.mr-price-rung.mid { border-left-color: var(--goldL); }
+.mr-price-rung.bot { opacity: 0.7; }
+.pl-label { color: var(--grayL); }
+.pl-val { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--grayL); }
+.pl-val.gold { color: var(--gold); font-size: 1.2rem; }
+.pl-val.gold-l { color: var(--goldL); }
+
+/* Type Compare */
+.mr-type-compare { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+.mr-type-row { display: flex; align-items: center; gap: 0.8rem; padding: 8px 12px; background: rgba(255,255,255,0.03); font-size: 13px; }
+.mr-type-row .tname { flex: 1; color: var(--paper); }
+.mr-type-row .tval { font-family: 'Cormorant Garamond', serif; color: var(--goldL); font-size: 1.1rem; }
+.mr-type-row .tchange { font-size: 11.5px; }
+.up-text { color: #6eca87; }
+.down-text { color: #d47070; }
+.neutral-text { color: var(--grayL); }
+.gold-text { color: var(--gold); }
+.mr-note { font-size: 12.5px; color: var(--grayL); line-height: 1.7; border-left: 2px solid rgba(184,146,42,0.3); padding-left: 0.8rem; }
+
+/* Price Band chart */
+.mr-price-band {
+  display: flex; align-items: flex-end; gap: 1.5rem; padding: 1rem 0 0.5rem;
+  height: 100px;
+}
+.mr-band-item { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+.band-bar { width: 100%; min-height: 8px; transition: opacity 0.3s; }
+.band-label { font-size: 11px; color: var(--grayL); text-align: center; }
+.band-pct { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--goldL); line-height: 1; }
+.band-tag { font-size: 10.5px; color: var(--gray); }
+.band-tag.gold-text { color: var(--gold); }
+
+/* District Deep Analysis */
+.mr-district-deep {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 1.5px;
+  background: rgba(184,146,42,0.1);
+  margin: 1.5rem 0 2rem;
+}
+.mr-deep-card {
+  background: #131210; padding: 1.6rem 1.4rem;
+  transition: background 0.25s;
+}
+.mr-deep-card:hover { background: rgba(184,146,42,0.06); }
+.mr-deep-rank {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem; color: rgba(184,146,42,0.25);
+  line-height: 1; margin-bottom: 0.3rem;
+}
+.mr-deep-card h4 { font-size: 1rem; color: var(--goldL); margin-bottom: 0.5rem; }
+.mr-deep-mid { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--paper); margin-bottom: 0.3rem; }
+.mr-deep-mid .gold { color: var(--gold); }
+.mr-deep-range { font-size: 11.5px; color: var(--grayL); margin-bottom: 0.4rem; }
+.mr-deep-change { font-size: 12px; margin-bottom: 0.7rem; }
+.mr-deep-card p { font-size: 12.5px; color: var(--gray); line-height: 1.7; }
+
+/* Outlook */
+.mr-outlook { background: rgba(184,146,42,0.05); border: 1px solid rgba(184,146,42,0.15); padding: 2.5rem; }
+.mr-outlook-title { margin-bottom: 2rem; }
+.mr-outlook-title .en-accent { font-family: 'Cormorant Garamond', serif; font-size: 11px; letter-spacing: 0.25em; color: var(--gold); text-transform: uppercase; display: block; margin-bottom: 0.4rem; }
+.mr-outlook-title h3 { font-size: 1.5rem; color: var(--paper); }
+.mr-outlook-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 1.5rem; }
+.mr-outlook-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(184,146,42,0.12);
+  padding: 1.4rem;
+}
+.mr-outlook-card.risk { border-color: rgba(200,80,80,0.25); background: rgba(200,80,80,0.04); }
+.mr-oc-icon { font-size: 1.3rem; margin-bottom: 0.7rem; }
+.mr-outlook-card h4 { font-size: 13px; color: var(--goldL); margin-bottom: 0.7rem; letter-spacing: 0.05em; }
+.mr-outlook-card.risk h4 { color: #d47070; }
+.mr-outlook-card p { font-size: 12.5px; color: var(--gray); line-height: 1.75; }
+.mr-source { font-size: 11px; color: rgba(176,168,152,0.5); letter-spacing: 0.1em; text-align: right; font-family: 'Cormorant Garamond', serif; }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .mr-stats-row { grid-template-columns: 1fr 1fr; gap: 1.5rem; padding: 1.5rem; }
+  .mr-stat-divider { display: none; }
+  .mr-part-header { grid-template-columns: 50px 1fr auto; }
+  .mr-part-sub { display: none; }
+  .mr-insight-grid { grid-template-columns: 1fr; }
+  .mr-district-deep { grid-template-columns: 1fr 1fr; }
+  .mr-outlook-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.contact { background: var(--ink); padding: 100px 0 0; }
+.contact .section-label { color: var(--goldL); }
+.contact .section-label::before { background: var(--goldL); }
+.contact .section-title { color: var(--paper); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6vw; margin-top: 3.5rem; align-items: start; }
+.contact-info { display: flex; flex-direction: column; gap: 2rem; }
+.contact-item { display: flex; gap: 1.2rem; align-items: flex-start; }
+.contact-icon {
+  flex-shrink: 0; width: 44px; height: 44px;
+  border: 1px solid rgba(184,146,42,0.35);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; color: var(--goldL);
+}
+.contact-text .label { font-size: 11px; color: rgba(184,146,42,0.6); letter-spacing: 0.2em; margin-bottom: 0.3rem; font-family: 'Cormorant Garamond', serif; }
+.contact-text .value { font-size: 15px; color: var(--paper); line-height: 1.7; }
+.contact-text .value a { color: var(--paper); text-decoration: none; transition: color 0.25s; }
+.contact-text .value a:hover { color: var(--goldL); }
+
+.contact-form { display: flex; flex-direction: column; gap: 1rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-field { display: flex; flex-direction: column; gap: 0.4rem; }
+.form-field label { font-size: 11px; color: rgba(184,146,42,0.6); letter-spacing: 0.18em; font-family: 'Cormorant Garamond', serif; }
+.form-field input, .form-field select, .form-field textarea {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(184,146,42,0.2);
+  color: var(--paper); padding: 12px 14px; font-size: 14px;
+  font-family: 'Noto Serif TC', serif; outline: none;
+  transition: border-color 0.25s;
+  -webkit-appearance: none;
+}
+.form-field input:focus, .form-field select, .form-field textarea:focus { border-color: var(--goldL); }
+.form-field textarea { resize: vertical; min-height: 120px; }
+.form-field select option { background: var(--smoke); }
+.form-submit {
+  padding: 14px 32px; background: var(--gold); color: var(--ink);
+  font-size: 14px; font-weight: 700; letter-spacing: 0.12em;
+  border: none; cursor: pointer; font-family: 'Noto Serif TC', serif;
+  transition: background 0.25s, transform 0.2s; align-self: flex-start;
+}
+.form-submit:hover { background: var(--goldL); transform: translateY(-2px); }
+
+/* ─── FOOTER ──────────────────────────────────────────────────── */
+footer {
+  background: var(--ink); border-top: 1px solid rgba(184,146,42,0.12);
+  padding: 3rem 6vw 2rem;
+}
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
+.footer-brand { display: flex; flex-direction: column; gap: 0.3rem; }
+.footer-brand .name { font-size: 16px; font-weight: 700; color: var(--paper); letter-spacing: 0.05em; }
+.footer-brand .en3 { font-size: 11px; color: var(--gray); letter-spacing: 0.2em; font-family: 'Cormorant Garamond', serif; }
+.footer-links { display: flex; gap: 2rem; list-style: none; }
+.footer-links a { font-size: 13px; color: var(--gray); text-decoration: none; transition: color 0.25s; }
+.footer-links a:hover { color: var(--goldL); }
+.footer-copy { font-size: 12px; color: var(--grayL); letter-spacing: 0.06em; }
+
+/* ─── ANIMATIONS ──────────────────────────────────────────────── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes marqueeAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s, transform 0.7s; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* ─── MOBILE ──────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .about-grid { grid-template-columns: 1fr; }
+  .about-img-wrap { display: none; }
+  .services-grid { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .process-steps::before { display: none; }
+  .expertise-grid { grid-template-columns: 1fr; }
+  .expertise-left { position: static; }
+  .cases-row { grid-template-columns: 1fr 1fr; }
+  .team-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}
+
+/* ─── MARKET REPORT (mkt- utilities) ─────────────────────── */
+.market-header { margin-bottom: 2.5rem; }
+.report-meta {
+  display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 1rem;
+  font-size: 12px; color: var(--grayL); letter-spacing: 0.06em;
+}
+.report-meta span::before { content: '— '; color: var(--gold); }
+
+/* KPIs */
+.mkt-kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5px; background: rgba(184,146,42,0.12); margin-bottom: 1.5px; }
+.mkt-kpi { background: var(--linen); padding: 1.8rem 1.5rem; position: relative; overflow: hidden; }
+.mkt-kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.mkt-kpi--green::before { background: #4CAF50; }
+.mkt-kpi--red::before   { background: #E05252; }
+.mkt-kpi--gold::before  { background: var(--gold); }
+.mkt-kpi--blue::before  { background: #2E9FC2; }
+.mkt-kpi-num { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 600; color: var(--ink); line-height: 1.1; }
+.mkt-kpi-num span { font-size: 1rem; color: var(--gold); margin-left: 2px; }
+.mkt-kpi-label { font-size: 13px; color: var(--smoke); font-weight: 600; margin: 0.5rem 0 0.3rem; }
+.mkt-kpi-sub { font-size: 11.5px; color: var(--gray); }
+
+/* Two-col layout */
+.mkt-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5px; background: rgba(184,146,42,0.12); }
+.mkt-card { background: var(--paper); padding: 2rem 2rem 1.8rem; }
+.mkt-card-title { display: flex; align-items: center; gap: 0.8rem; font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: 1rem; }
+.mkt-card p { font-size: 13.5px; color: var(--gray); line-height: 1.9; margin-bottom: 0.8rem; }
+.mkt-tag { padding: 2px 10px; background: var(--ink); color: var(--goldL); font-size: 10.5px; letter-spacing: 0.1em; flex-shrink: 0; }
+.mkt-note { font-size: 12px !important; color: var(--grayL) !important; border-top: 1px solid var(--linen); padding-top: 0.8rem; }
+
+/* Trend row */
+.mkt-trend-row { display: flex; gap: 1px; margin-top: 1.2rem; background: rgba(184,146,42,0.12); }
+.mkt-trend { flex: 1; background: var(--linen); padding: 1rem; text-align: center; }
+.mkt-trend-label { font-size: 11px; color: var(--gray); letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+.mkt-trend-val { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; font-family: 'Cormorant Garamond', serif; }
+.mkt-trend-note { font-size: 11px; color: var(--gray); }
+.mkt-up   { color: #4CAF50; }
+.mkt-down { color: #E05252; }
+.mkt-flat { color: var(--gold); }
+
+/* City bars */
+.mkt-city-bars { display: flex; flex-direction: column; gap: 0.7rem; }
+.mkt-city-row { display: grid; grid-template-columns: 3.5rem 1fr 5rem 3rem; align-items: center; gap: 0.6rem; padding: 0.5rem 0.7rem; }
+.mkt-city-row.mkt-city--highlight { background: var(--linen); border-left: 3px solid var(--gold); }
+.mkt-city-name { font-size: 12.5px; color: var(--ink); font-weight: 500; }
+.mkt-city-bar-wrap { height: 6px; background: rgba(184,146,42,0.1); overflow: hidden; }
+.mkt-city-bar { height: 100%; background: var(--gold); opacity: 0.5; transition: width 1s; }
+.mkt-city--highlight .mkt-city-bar { opacity: 1; }
+.mkt-city-num { font-size: 12px; color: var(--gray); text-align: right; }
+.mkt-city-yoy { font-size: 11.5px; font-weight: 700; text-align: right; }
+
+/* District grid */
+.mkt-district-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 1.5px; background: rgba(184,146,42,0.12); margin-top: 1rem; }
+.mkt-dist { background: var(--linen); padding: 1rem 0.8rem; text-align: center; transition: background 0.2s; }
+.mkt-dist:hover { background: var(--ink); }
+.mkt-dist:hover .mkt-dist-name,
+.mkt-dist:hover .mkt-dist-vol,
+.mkt-dist:hover .mkt-dist-price,
+.mkt-dist:hover .mkt-dist-note { color: var(--paper); }
+.mkt-dist:hover .mkt-dist-price { color: var(--goldL); }
+.mkt-dist--top { background: var(--paper); border-top: 2px solid var(--gold); }
+.mkt-dist-rank { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--gold); font-weight: 600; }
+.mkt-dist-name { font-size: 13px; font-weight: 700; color: var(--ink); margin: 0.2rem 0; }
+.mkt-dist-vol { font-size: 12px; color: var(--gray); }
+.mkt-dist-price { font-size: 13.5px; font-weight: 700; color: var(--gold); margin-top: 0.3rem; }
+.mkt-dist-note { font-size: 10.5px; color: var(--grayL); margin-top: 0.2rem; }
+
+/* Percentile bars */
+.mkt-percentile { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.2rem; }
+.mkt-pct-row { display: grid; grid-template-columns: 6.5rem 1fr 5rem; align-items: center; gap: 0.7rem; }
+.mkt-pct-row--highlight { background: rgba(184,146,42,0.06); padding: 0.3rem 0.5rem; margin: 0 -0.5rem; }
+.mkt-pct-label { font-size: 11.5px; color: var(--gray); }
+.mkt-pct-bar-wrap { height: 5px; background: rgba(184,146,42,0.1); overflow: hidden; }
+.mkt-pct-bar { height: 100%; background: var(--smoke); opacity: 0.4; }
+.mkt-pct-bar--gold { background: var(--gold); opacity: 1; }
+.mkt-pct-val { font-size: 12.5px; font-weight: 700; color: var(--ink); text-align: right; }
+
+/* Price bands */
+.mkt-price-bands { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 1rem; }
+.mkt-band { display: grid; grid-template-columns: 8rem 1fr; align-items: center; gap: 0.7rem; }
+.mkt-band-range { font-size: 12px; color: var(--gray); }
+.mkt-band--main .mkt-band-range { font-weight: 700; color: var(--ink); }
+.mkt-band-bar-wrap { display: flex; align-items: center; gap: 0.5rem; height: 18px; background: rgba(184,146,42,0.07); padding: 0 0.3rem; }
+.mkt-band-bar { height: 8px; background: var(--smoke); opacity: 0.25; min-width: 2px; }
+.mkt-band-bar--gold { background: var(--gold); opacity: 0.8; }
+.mkt-band-pct { font-size: 11.5px; color: var(--gray); white-space: nowrap; }
+.mkt-band--main .mkt-band-pct { color: var(--gold); font-weight: 700; }
+
+/* Outlook */
+.mkt-outlook { background: var(--linen); padding: 2rem; margin-top: 1.5px; }
+.mkt-outlook-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5px; background: rgba(184,146,42,0.12); margin: 1.2rem 0; }
+.mkt-ol-item { background: var(--paper); padding: 1.5rem; }
+.mkt-ol-icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
+.mkt-ol-item h4 { font-size: 0.95rem; color: var(--ink); margin-bottom: 0.6rem; }
+.mkt-ol-item p { font-size: 12.5px; color: var(--gray); line-height: 1.8; }
+.mkt-ol--blue  { border-top: 3px solid #2E9FC2; }
+.mkt-ol--gold  { border-top: 3px solid var(--gold); }
+.mkt-ol--red   { border-top: 3px solid #E05252; }
+.mkt-ol--green { border-top: 3px solid #4CAF50; }
+.mkt-disclaimer { font-size: 11.5px; color: var(--grayL); border-top: 1px solid rgba(184,146,42,0.15); padding-top: 0.8rem; }
+
+@media (max-width: 900px) {
+  .mkt-kpis, .mkt-outlook-grid { grid-template-columns: 1fr 1fr; }
+  .mkt-two-col { grid-template-columns: 1fr; }
+  .mkt-district-grid { grid-template-columns: repeat(3,1fr); }
+}
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark"></div>
+    <div class="nav-logo-text">
+      <div class="cn">展新不動產估價師事務所</div>
+      <div class="en-sub">ZHAN XIN REAL ESTATE APPRAISERS</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">關於事務所</a></li>
+    <li><a href="#services">服務項目</a></li>
+    <li><a href="#process">估價流程</a></li>
+    <li><a href="#expertise">專業領域</a></li>
+    <li><a href="#market-report">房市季報</a></li>
+    <li><a href="#contact" class="nav-cta">預約諮詢</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow en">Certified Real Estate Appraisal</div>
+    <h1>
+      專業估價<br>
+      <span class="gold">精準鑑定</span>
+      <span class="en-title">Precision. Integrity. Value.</span>
+    </h1>
+    <p class="hero-desc">
+      展新不動產估價師事務所由資深持照估價師主持，服務範圍遍及全臺各縣市。
+      承辦銀行鑑定、司法拍賣、企業資產、政府標案及私人諮詢，以嚴謹的估價方法與豐富的實務經驗，
+      為您提供可信賴的不動產價值評估。
+    </p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">3<span>大</span></div>
+        <div class="stat-label">法定估價方法</div>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">立即預約諮詢</a>
+      <a href="#services" class="btn-ghost">了解服務項目 →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-bg-img"></div>
+    <div class="hero-grid-lines"></div>
+    <div class="hero-accent-circle"></div>
+    <div class="hero-badge-wrap">
+      <div class="hero-brand-block">
+        <div class="hero-brand-rule"></div>
+        <div class="hero-brand-zh">展新不動產<br>估價師事務所</div>
+        <div class="hero-brand-en">Zhan Xin Real Estate<br>Appraisers &amp; Associates</div>
+        <div class="hero-brand-rule"></div>
+        <div class="hero-brand-chips">
+          <span class="hero-brand-chip">不動產估價師法</span>
+          <span class="hero-brand-chip">三大鑑定方法</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-bar">
+  <div class="marquee-inner" id="marquee">
+    <span class="marquee-item">比較法估價</span>
+    <span class="marquee-item">收益資本化法</span>
+    <span class="marquee-item">成本法鑑定</span>
+    <span class="marquee-item">銀行抵押貸款評估</span>
+    <span class="marquee-item">法院鑑定報告</span>
+    <span class="marquee-item">都市更新</span>
+    <span class="marquee-item">土地徵收補償</span>
+    <span class="marquee-item">稅務用地評價</span>
+    <span class="marquee-item">投資分析報告</span>
+    <span class="marquee-item">租金合理性分析</span>
+    <span class="marquee-item">建物重建成本估算</span>
+    <span class="marquee-item">比較法估價</span>
+    <span class="marquee-item">收益資本化法</span>
+    <span class="marquee-item">成本法鑑定</span>
+    <span class="marquee-item">銀行抵押貸款評估</span>
+    <span class="marquee-item">法院鑑定報告</span>
+    <span class="marquee-item">都市更新</span>
+    <span class="marquee-item">土地徵收補償</span>
+    <span class="marquee-item">稅務用地評價</span>
+    <span class="marquee-item">投資分析報告</span>
+    <span class="marquee-item">租金合理性分析</span>
+    <span class="marquee-item">建物重建成本估算</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img-wrap reveal">
+        <div class="about-img-block"></div>
+        <div class="about-img-deco"></div>
+        <div class="about-img-num">est. 2004</div>
+      </div>
+      <div class="about-content reveal">
+        <div class="section-label en">About Us</div>
+        <h2 class="section-title">以專業為本，以誠信為基</h2>
+        <p class="about-body">
+          展新不動產估價師事務所設立於臺北市，由具備不動產估價師法定執照之資深估價師主持，
+          服務範圍涵蓋全臺各縣市。事務所秉持「客觀、公正、獨立」之估價精神，
+          嚴格遵循《不動產估價技術規則》及相關法規，提供具法律效力之鑑定報告書。
+        </p>
+        <p class="about-body">
+          多年來持續服務各大銀行金融機構、司法機關、政府單位及私人客戶，
+          月均承辦案件逾百件，累計出具鑑定報告數千份，是全臺值得信賴的不動產估價專業機構。
+        </p>
+        <ul class="about-features">
+          <li>
+            <div class="feature-dot"></div>
+            <span>法定不動產估價師執照，符合《不動產估價師法》規範</span>
+          </li>
+          <li>
+            <div class="feature-dot"></div>
+            <span>採三大法定估價方法（比較法、收益法、成本法）交叉驗證</span>
+          </li>
+          <li>
+            <div class="feature-dot"></div>
+            <span>完整E&O專業責任保險保障，報告具法律效力</span>
+          </li>
+          <li>
+            <div class="feature-dot"></div>
+            <span>臺北市不動產估價師公會會員事務所</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="container">
+    <div style="text-align:center;">
+      <div class="section-label en reveal" style="justify-content:center;">Services</div>
+      <h2 class="section-title reveal">全方位估價服務項目</h2>
+      <p class="section-sub reveal" style="max-width:600px;margin:auto;">
+        涵蓋住宅、商業、工業及特殊用途不動產，提供完整的估價與諮詢解決方案
+      </p>
+    </div>
+    <div class="services-grid" style="margin-top:3.5rem;">
+
+      <div class="service-card reveal">
+        <div class="service-num">01</div>
+        <div class="service-icon">🏦</div>
+        <h3>金融機構抵押貸款估價</h3>
+        <p>配合各大銀行、信用合作社及民間金融機構，承辦不動產擔保品抵押估價，提供符合金管會規範之鑑定報告書，協助放款審核及風險控管。</p>
+        <div class="service-tags">
+          <span class="tag">房貸鑑定</span>
+          <span class="tag">企業融資</span>
+          <span class="tag">建設融資</span>
+          <span class="tag">再融資</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">02</div>
+        <div class="service-icon">⚖️</div>
+        <h3>司法拍賣鑑定報告</h3>
+        <p>受法院委託承辦強制執行標的之不動產鑑定，依《不動產估價技術規則》出具具司法效力之鑑定報告，協助確定拍賣底價，保障債權人與債務人權益。</p>
+        <div class="service-tags">
+          <span class="tag">強制執行</span>
+          <span class="tag">拍賣底價</span>
+          <span class="tag">法院委任</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">03</div>
+        <div class="service-icon">🏛️</div>
+        <h3>政府機關及公共工程估價</h3>
+        <p>承辦土地徵收補償費查估、公有土地處分、政府採購標案土地估價，以及公共建設用地取得相關鑑定，協助政府機關依法辦理不動產交易。</p>
+        <div class="service-tags">
+          <span class="tag">土地徵收</span>
+          <span class="tag">公有財產</span>
+          <span class="tag">標案估價</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">04</div>
+        <div class="service-icon">🏢</div>
+        <h3>企業資產評估與財報估價</h3>
+        <p>配合企業財務報表編製，提供固定資產（不動產）之公允價值評估，符合IFRS 13公允價值及IAS 40投資性不動產相關規範，協助企業精確呈現資產價值。</p>
+        <div class="service-tags">
+          <span class="tag">IFRS合規</span>
+          <span class="tag">財報估價</span>
+          <span class="tag">M&A盡職調查</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">05</div>
+        <div class="service-icon">🔄</div>
+        <h3>都市更新與危老重建估價</h3>
+        <p>協助都更事業計畫之權利變換估價，包含更新前後價值評估、分配比例計算及相關爭議鑑定，以及危老建築重建專案的土地貢獻度與新舊建物估價服務。</p>
+        <div class="service-tags">
+          <span class="tag">權利變換</span>
+          <span class="tag">危老重建</span>
+          <span class="tag">容積獎勵</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">06</div>
+        <div class="service-icon">📊</div>
+        <h3>租金合理性及市場分析</h3>
+        <p>提供商業、住宅及工業租賃物件之合理租金估算，協助房東、承租人及企業進行租金談判依據，並提供區域市場動態分析、投資報酬率試算等顧問服務。</p>
+        <div class="service-tags">
+          <span class="tag">合理租金</span>
+          <span class="tag">市場分析</span>
+          <span class="tag">投報評估</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="container">
+    <div class="section-label en reveal">Our Process</div>
+    <h2 class="section-title reveal">標準化估價流程</h2>
+    <p class="section-sub reveal" style="max-width:560px;">
+      從委託受理到報告交付，每一步驟皆依法規嚴格執行，確保鑑定報告之客觀性與合法效力
+    </p>
+    <div class="process-steps">
+      <div class="step reveal">
+        <div class="step-num"><span>01</span></div>
+        <h4>委託受理</h4>
+        <p>確認委託目的、物件基本資料，簽訂委託契約，告知估價條件與時程。</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num"><span>02</span></div>
+        <h4>資料蒐集</h4>
+        <p>調閱謄本、地籍圖、建物登記資料、實價登錄交易資訊及相關法規文件。</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num"><span>03</span></div>
+        <h4>現場勘估</h4>
+        <p>估價師親赴現場，核實建物現況、周邊環境、使用情形及不利因素。</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num"><span>04</span></div>
+        <h4>估價分析</h4>
+        <p>運用比較法、收益法、成本法三大方法交叉估算，決定最終估計價格。</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num"><span>05</span></div>
+        <h4>報告交付</h4>
+        <p>出具符合法規之正式鑑定報告書，蓋有估價師執業印鑑，具法律效力。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERTISE -->
+<section class="expertise" id="expertise">
+  <div class="container">
+    <div class="expertise-grid">
+      <div class="expertise-left reveal">
+        <div class="section-label en">Expertise</div>
+        <h2 class="section-title">全臺服務<br>多元物業類型</h2>
+        <p class="section-sub" style="margin-top:1.2rem;">
+          二十年全臺執業經驗，累積豐富的各地不動產市場實務知識，
+          精通各類物業型態的估價方法與市場特性。
+        </p>
+        <div style="margin-top:2.5rem;">
+          <a href="#contact" class="btn-primary" style="display:inline-flex;">諮詢專業顧問</a>
+        </div>
+      </div>
+      <div class="expertise-right reveal">
+        <div class="exp-item">
+          <div class="exp-icon">🏘️</div>
+          <div>
+            <h4>住宅類不動產</h4>
+            <p>透天厝、公寓、華廈、大樓、套房等各類住宅型態，熟悉全臺各區域市場特性，包含老舊公寓、預售屋及新成屋之估價方法。</p>
+          </div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-icon">🏬</div>
+          <div>
+            <h4>商業不動產</h4>
+            <p>店面、辦公室、商業大樓、旅館及休閒設施，採用收益資本化法為主，精算租金收益、空置率及資本化率，反映商業物件投資價值。</p>
+          </div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-icon">🏭</div>
+          <div>
+            <h4>工業廠房及廠辦</h4>
+            <p>工業區廠房、廠辦大樓及倉庫，瞭解全臺各縣市工業用地行情，熟悉環保、消防等法規對工業不動產價值之影響，提供精準的廠房估值服務。</p>
+          </div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-icon">🌾</div>
+          <div>
+            <h4>農地及特殊用途土地</h4>
+            <p>農牧用地、林業用地、水利用地及特定目的事業用地等，依用途管制、農業發展條例及土地使用分區規定，進行合適的估價分析。</p>
+          </div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-icon">🏗️</div>
+          <div>
+            <h4>素地及開發用地</h4>
+            <p>素地、建設用地及開發中土地，配合都市計畫、容積率、建蔽率等法規，採用開發分析法或比較法，評估土地開發潛力與市場價值。</p>
+          </div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-icon">⭐</div>
+          <div>
+            <h4>特殊不動產</h4>
+            <p>廟宇、加油站、停車場、墓地、高爾夫球場等特殊物件，依物件性質選用適合之估價方法，提供客觀且具參考價值之鑑定意見。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET REPORT -->
+<section class="market-report" id="market-report">
+  <div class="container">
+    <div class="mr-header reveal">
+      <div class="section-label en" style="color:var(--goldL);">Market Report · 115年Q1</div>
+      <h2 class="section-title" style="color:var(--paper);">臺北市房市分析季報</h2>
+      <p class="section-sub" style="color:var(--grayL);max-width:600px;">
+        本季報資料來源：內政部統計月報、臺北市地政局、實價登錄。數據部分為估算值，供市場趨勢參考，不構成投資建議。
+      </p>
+    </div>
+
+    <!-- Key Stats Banner -->
+    <div class="mr-stats-row reveal">
+      <div class="mr-stat">
+        <div class="mr-stat-num">6,089<span class="mr-unit">棟</span></div>
+        <div class="mr-stat-label">115年Q1 買賣移轉棟數</div>
+        <div class="mr-stat-badge up">年增 ▲4%</div>
+      </div>
+      <div class="mr-stat-divider"></div>
+      <div class="mr-stat">
+        <div class="mr-stat-num">81<span class="mr-unit">萬/坪</span></div>
+        <div class="mr-stat-label">全市均標單價（50分位）</div>
+        <div class="mr-stat-badge neutral">量縮價穩</div>
+      </div>
+      <div class="mr-stat-divider"></div>
+      <div class="mr-stat">
+        <div class="mr-stat-num">22,694<span class="mr-unit">棟</span></div>
+        <div class="mr-stat-label">114年全年（近9年低）</div>
+        <div class="mr-stat-badge down">年減 ▼22.7%</div>
+      </div>
+      <div class="mr-stat-divider"></div>
+      <div class="mr-stat">
+        <div class="mr-stat-num">155<span class="mr-unit">萬/坪</span></div>
+        <div class="mr-stat-label">全市頂標（88分位）</div>
+        <div class="mr-stat-badge neutral">豪宅韌性強</div>
+      </div>
+    </div>
+
+    <!-- Three-part accordion cards -->
+    <div class="mr-parts reveal">
+
+      <!-- Part 01: Volume -->
+      <div class="mr-part">
+        <div class="mr-part-header" onclick="toggleMrPart(this)">
+          <div class="mr-part-num">01</div>
+          <div class="mr-part-title">
+            <div class="mr-part-en">Volume Analysis</div>
+            <div class="mr-part-zh">量體分析</div>
+          </div>
+          <div class="mr-part-sub">買賣移轉棟數 · 六都比較 · 行政區成交量</div>
+          <div class="mr-part-toggle">＋</div>
+        </div>
+        <div class="mr-part-body">
+          <div class="mr-insight-grid">
+            <div class="mr-insight">
+              <div class="mr-insight-icon">📊</div>
+              <div>
+                <h4>六都年增率比較</h4>
+                <div class="mr-city-bars">
+                  <div class="mr-city-bar"><span class="city">臺南市</span><div class="bar-wrap"><div class="bar up" style="width:60%">▲18.1%</div></div></div>
+                  <div class="mr-city-bar"><span class="city">臺北市</span><div class="bar-wrap"><div class="bar up" style="width:25%">▲4%</div></div></div>
+                  <div class="mr-city-bar"><span class="city">新北市</span><div class="bar-wrap"><div class="bar up" style="width:32%">▲7.2%</div></div></div>
+                  <div class="mr-city-bar"><span class="city">桃園市</span><div class="bar-wrap"><div class="bar down" style="width:20%">▼3.6%</div></div></div>
+                  <div class="mr-city-bar"><span class="city">高雄市</span><div class="bar-wrap"><div class="bar down" style="width:25%">▼5.7%</div></div></div>
+                  <div class="mr-city-bar"><span class="city">臺中市</span><div class="bar-wrap"><div class="bar down" style="width:55%">▼18.6%</div></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="mr-insight">
+              <div class="mr-insight-icon">🏆</div>
+              <div>
+                <h4>交易熱區前五名</h4>
+                <div class="mr-district-list">
+                  <div class="mr-district-item"><span class="rank gold">01</span><span class="dname">內湖區</span><span class="dval">750棟</span><span class="dtag">科技廊帶效應</span></div>
+                  <div class="mr-district-item"><span class="rank">02</span><span class="dname">大安區</span><span class="dval">720棟</span><span class="dtag">傳統核心熱區</span></div>
+                  <div class="mr-district-item"><span class="rank">03</span><span class="dname">中山區</span><span class="dval">680棟</span><span class="dtag">捷運沿線</span></div>
+                  <div class="mr-district-item"><span class="rank">04</span><span class="dname">北投區</span><span class="dval">670棟</span><span class="dtag">AI/半導體聚集</span></div>
+                  <div class="mr-district-item"><span class="rank">05</span><span class="dname">信義區</span><span class="dval">580棟</span><span class="dtag">豪宅核心</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="mr-insight full-width">
+              <div class="mr-insight-icon">🔍</div>
+              <div>
+                <h4>量體分析要點</h4>
+                <ul class="mr-bullets">
+                  <li>115年Q1移轉6,089棟，年增4%，惟主因基期偏低（114Q1逢農曆春節），市場實質買氣尚未明顯回溫。</li>
+                  <li>114年全年台北市移轉量約22,694棟，年減22.7%，創近9年新低，第七波信用管制後座力深遠。</li>
+                  <li>美國新關稅政策引發全球股市震盪，財富效應轉負，壓制高單價物件交易意願，觀望氛圍濃厚。</li>
+                  <li>建照量縮預示中長期新供給趨緊，有助支撐台北市房價中長期穩定。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 02: Price -->
+      <div class="mr-part">
+        <div class="mr-part-header" onclick="toggleMrPart(this)">
+          <div class="mr-part-num">02</div>
+          <div class="mr-part-title">
+            <div class="mr-part-en">Price Analysis</div>
+            <div class="mr-part-zh">價格分析</div>
+          </div>
+          <div class="mr-part-sub">均標單價 · 總價帶分布 · 五分位分析</div>
+          <div class="mr-part-toggle">＋</div>
+        </div>
+        <div class="mr-part-body">
+          <div class="mr-insight-grid">
+            <div class="mr-insight">
+              <div class="mr-insight-icon">💰</div>
+              <div>
+                <h4>五分位建坪單價（全市混合）</h4>
+                <div class="mr-price-ladder">
+                  <div class="mr-price-rung top"><span class="pl-label">頂標 88分位</span><span class="pl-val gold">～155萬/坪</span></div>
+                  <div class="mr-price-rung"><span class="pl-label">前標 75分位</span><span class="pl-val">～115萬/坪</span></div>
+                  <div class="mr-price-rung mid"><span class="pl-label">均標 50分位</span><span class="pl-val gold-l">～81萬/坪</span></div>
+                  <div class="mr-price-rung"><span class="pl-label">後標 25分位</span><span class="pl-val">～55萬/坪</span></div>
+                  <div class="mr-price-rung bot"><span class="pl-label">底標 12分位</span><span class="pl-val">～40萬/坪</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="mr-insight">
+              <div class="mr-insight-icon">🏢</div>
+              <div>
+                <h4>各類別均標比較</h4>
+                <div class="mr-type-compare">
+                  <div class="mr-type-row"><span class="tname">公寓（無電梯）</span><span class="tval">～89萬/坪</span><span class="tchange down-text">季跌2萬</span></div>
+                  <div class="mr-type-row"><span class="tname">大樓</span><span class="tval">～72萬/坪</span><span class="tchange down-text">季跌1萬</span></div>
+                  <div class="mr-type-row"><span class="tname">華廈</span><span class="tval">～64萬/坪</span><span class="tchange down-text">季跌1萬</span></div>
+                </div>
+                <p class="mr-note">公寓因含土地持分，具「地坪溢價」特性，均標高於大樓與華廈。</p>
+              </div>
+            </div>
+            <div class="mr-insight full-width">
+              <div class="mr-insight-icon">📊</div>
+              <div>
+                <h4>115年Q1全區住宅成交總價帶分布</h4>
+                <div class="mr-price-band">
+                  <div class="mr-band-item"><div class="band-bar" style="height:60px;background:rgba(184,146,42,0.8);"></div><span class="band-label">1,000~2,000萬</span><span class="band-pct">43.9%</span><span class="band-tag">主力總價帶</span></div>
+                  <div class="mr-band-item"><div class="band-bar" style="height:42px;background:rgba(184,146,42,0.55);"></div><span class="band-label">&gt;2,000萬</span><span class="band-pct">35.4%</span><span class="band-tag gold-text">六都最高</span></div>
+                  <div class="mr-band-item"><div class="band-bar" style="height:22px;background:rgba(184,146,42,0.35);"></div><span class="band-label">500~1,000萬</span><span class="band-pct">15.2%</span><span class="band-tag"></span></div>
+                  <div class="mr-band-item"><div class="band-bar" style="height:8px;background:rgba(184,146,42,0.2);"></div><span class="band-label">&lt;500萬</span><span class="band-pct">5.5%</span><span class="band-tag">最稀少</span></div>
+                </div>
+                <p class="mr-note" style="margin-top:1rem;">全市均標約1,650萬，高端需求結構顯著，超過2,000萬佔比遠高於其他城市。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 03: District -->
+      <div class="mr-part">
+        <div class="mr-part-header" onclick="toggleMrPart(this)">
+          <div class="mr-part-num">03</div>
+          <div class="mr-part-title">
+            <div class="mr-part-en">District Analysis</div>
+            <div class="mr-part-zh">行政區分析</div>
+          </div>
+          <div class="mr-part-sub">各行政區均標 · 主要行政區深析 · 市場展望</div>
+          <div class="mr-part-toggle">＋</div>
+        </div>
+        <div class="mr-part-body">
+          <div class="mr-district-deep">
+            <div class="mr-deep-card">
+              <div class="mr-deep-rank">01</div>
+              <h4>信義區</h4>
+              <div class="mr-deep-mid">均標 <span class="gold">92萬</span>/坪</div>
+              <div class="mr-deep-range">底標65 ～ 頂標170萬/坪</div>
+              <div class="mr-deep-change up-text">季變動 ＋1萬/坪</div>
+              <p>信義計畫區新案持續挹注，豪宅市場韌性強；均標創新高。</p>
+            </div>
+            <div class="mr-deep-card">
+              <div class="mr-deep-rank">02</div>
+              <h4>大安區</h4>
+              <div class="mr-deep-mid">均標 <span class="gold">89萬</span>/坪</div>
+              <div class="mr-deep-range">底標60 ～ 頂標155萬/坪</div>
+              <div class="mr-deep-change down-text">季變動 －1.5萬/坪</div>
+              <p>精品豪宅與公寓並存；頂標受高端建案支撐，均標溫和修正。</p>
+            </div>
+            <div class="mr-deep-card">
+              <div class="mr-deep-rank">03</div>
+              <h4>中山區</h4>
+              <div class="mr-deep-mid">均標 <span class="gold">68萬</span>/坪</div>
+              <div class="mr-deep-range">底標48 ～ 頂標110萬/坪</div>
+              <div class="mr-deep-change neutral-text">季變動 持平</div>
+              <p>捷運沿線中高密度住宅為主，自住與年輕換屋族主力市場。</p>
+            </div>
+            <div class="mr-deep-card">
+              <div class="mr-deep-rank">04</div>
+              <h4>北投區</h4>
+              <div class="mr-deep-mid">均標 <span class="gold">62萬</span>/坪</div>
+              <div class="mr-deep-range">底標40 ～ 頂標98萬/坪</div>
+              <div class="mr-deep-change up-text">季變動 ＋1萬/坪（AI效應）</div>
+              <p>輝達台灣總部設立周邊，科技業置產增加，全區均標走揚。</p>
+            </div>
+            <div class="mr-deep-card">
+              <div class="mr-deep-rank">05</div>
+              <h4>文山區</h4>
+              <div class="mr-deep-mid">均標 <span class="gold">52萬</span>/坪</div>
+              <div class="mr-deep-range">底標38 ～ 頂標80萬/坪</div>
+              <div class="mr-deep-change neutral-text">季變動 持平</div>
+              <p>首購友善市場，木柵捷運沿線生活機能完善，低總價產品多。</p>
+            </div>
+          </div>
+
+          <!-- Market Outlook -->
+          <div class="mr-outlook">
+            <div class="mr-outlook-title">
+              <span class="en-accent">Market Outlook</span>
+              <h3>115年臺北房市展望</h3>
+            </div>
+            <div class="mr-outlook-grid">
+              <div class="mr-outlook-card">
+                <div class="mr-oc-icon">📊</div>
+                <h4>量體展望</h4>
+                <p>115年全年台北市移轉棟數預估落在23,000～26,000棟，Q2傳統旺季若貸款管制鬆動可望小幅改善，但雙位數年增難見。</p>
+              </div>
+              <div class="mr-outlook-card">
+                <div class="mr-oc-icon">💰</div>
+                <h4>價格趨勢</h4>
+                <p>整體「量縮價穩」格局延續，高端市場（信義、大安）豪宅需求韌性強。公寓因都更預期維持高溢價。</p>
+              </div>
+              <div class="mr-outlook-card risk">
+                <div class="mr-oc-icon">⚠️</div>
+                <h4>主要風險</h4>
+                <p>①美中關稅升級蒸發財富效應 ②不動產放貸水位仍高，核貸排隊難解 ③房貸利率高檔壓縮換屋意願 ④股市震盪轉移置產信心</p>
+              </div>
+              <div class="mr-outlook-card">
+                <div class="mr-oc-icon">🔍</div>
+                <h4>重點觀察</h4>
+                <p>央行信用管制是否下半年鬆動；北投/士林AI聚落效應能否擴散；AI/科技股財富效應是否重燃高端置產動能。</p>
+              </div>
+            </div>
+            <p class="mr-source">資料來源：內政部統計月報、臺北市地政局、實價登錄　｜　數據部分為估算值，僅供市場趨勢參考</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /mr-parts -->
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="section-label en reveal">Contact Us</div>
+    <h2 class="section-title reveal">預約估價諮詢</h2>
+    <p class="section-sub reveal" style="color:var(--grayL);">
+      歡迎來電或填寫表單，我們的估價師將於一個工作日內與您聯繫，提供初步評估意見
+    </p>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div class="contact-text">
+            <div class="label">事務所地址</div>
+            <div class="value">臺北市中山區民權東路三段37號11樓</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div class="contact-text">
+            <div class="label">聯絡電話</div>
+            <div class="value"><a href="tel:0223712025">(02) 2371-2025</a></div>
+          </div>
+        </div>
+        </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🕐</div>
+          <div class="contact-text">
+            <div class="label">服務時間</div>
+            <div class="value">週一至週五　08:30–17:30<br>週六　09:00–12:00（預約制）</div>
+          </div>
+        </div>
+        <div style="margin-top:1rem;padding:1.5rem;border:1px solid rgba(184,146,42,0.2);">
+          <p style="font-size:12px;color:rgba(184,146,42,0.6);letter-spacing:0.2em;font-family:'Cormorant Garamond',serif;margin-bottom:0.8rem;">— 快速估價費用說明 —</p>
+          <p style="font-size:13px;color:var(--grayL);line-height:1.8;">
+            一般住宅抵押估價費用依物件類型、所在區域及緊急程度而異。<br>
+            基本服務費自 <span style="color:var(--goldL);">NT$ 15,000 起</span>，確切費用以評估後報價為準。<br>
+            緊急快速出件、特殊物件另計。歡迎來電詢問。
+          </p>
+        </div>
+      </div>
+      <div class="contact-form reveal">
+        <div class="form-row">
+          <div class="form-field">
+            <label>姓名 / 單位名稱</label>
+            <input type="text" placeholder="請輸入">
+          </div>
+          <div class="form-field">
+            <label>聯絡電話</label>
+            <input type="tel" placeholder="0912-345-678">
+          </div>
+        </div>
+        <div class="form-field">
+          <label>電子信箱</label>
+          <input type="email" placeholder="your@email.com">
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>委託目的</label>
+            <select>
+              <option value="">請選擇</option>
+              <option>銀行抵押貸款鑑定</option>
+              <option>司法拍賣鑑定</option>
+              <option>企業資產評估</option>
+              <option>都市更新/危老重建</option>
+              <option>私人買賣參考</option>
+              <option>租金合理性評估</option>
+              <option>稅務申報用途</option>
+              <option>其他</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>物件類型</label>
+            <select>
+              <option value="">請選擇</option>
+              <option>住宅（透天/公寓/大樓）</option>
+              <option>店面/商業空間</option>
+              <option>辦公室/商辦</option>
+              <option>廠房/工業用地</option>
+              <option>素地/建設用地</option>
+              <option>農地/特殊用地</option>
+              <option>其他</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field">
+          <label>物件地址（概略）</label>
+          <input type="text" placeholder="例：臺北市大安區○○路段附近">
+        </div>
+        <div class="form-field">
+          <label>需求說明 / 補充事項</label>
+          <textarea placeholder="請說明委託目的、預期時程或其他需要我們了解的資訊…"></textarea>
+        </div>
+        <button class="form-submit" type="button">送出諮詢需求 →</button>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="name">展新不動產估價師事務所</div>
+        <div class="en3">Zhan Xin Real Estate Appraisers &amp; Associates</div>
+      </div>
+      <ul class="footer-links">
+        <li><a href="#about">關於我們</a></li>
+        <li><a href="#services">服務項目</a></li>
+        <li><a href="#team">估價師</a></li>
+        <li><a href="#contact">聯絡我們</a></li>
+      </ul>
+      <div class="footer-copy">© 2025 展新不動產估價師事務所 版權所有</div>
+    </div>
+  </footer>
+</section>
+
+<script>
+// Market Report Accordion
+function toggleMrPart(header) {
+  const part = header.closest('.mr-part');
+  const isActive = part.classList.contains('active');
+  document.querySelectorAll('.mr-part').forEach(p => p.classList.remove('active'));
+  if (!isActive) part.classList.add('active');
+}
+// Auto-open first part
+document.addEventListener('DOMContentLoaded', () => {
+  const firstPart = document.querySelector('.mr-part');
+  if (firstPart) firstPart.classList.add('active');
+});
+
+// Nav scroll
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      const siblings = [...e.target.parentElement.children].filter(c => c.classList.contains('reveal') && !c.classList.contains('in'));
+      const idx = siblings.indexOf(e.target);
+      setTimeout(() => e.target.classList.add('in'), idx * 80);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
