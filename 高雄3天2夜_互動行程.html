@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高雄 3天2夜｜互動行程</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-deep:#12203a; --navy:#1F3A5F; --navy-soft:#2a4a74;
+  --gold:#C8A45C; --gold-soft:#dcc08a; --cream:#F2EDE3;
+  --mist:#8FA3BF; --sunset:#E58E6D;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:'Noto Sans TC',sans-serif;
+  background:linear-gradient(180deg,var(--navy-deep),var(--navy) 40%,var(--navy-deep));
+  color:var(--cream);line-height:1.7;font-weight:300;min-height:100vh;
+}
+.wrap{max-width:680px;margin:0 auto;padding:0 20px}
+
+/* HERO */
+.hero{text-align:center;padding:48px 0 8px}
+.hero .eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;letter-spacing:.35em;color:var(--gold);font-size:14px}
+.hero h1{
+  font-family:'Noto Serif TC',serif;font-weight:900;font-size:clamp(36px,9vw,56px);letter-spacing:.06em;margin:10px 0 4px;
+  background:linear-gradient(180deg,var(--cream),var(--gold-soft));-webkit-background-clip:text;background-clip:text;color:transparent
+}
+.hero .dates{display:inline-flex;align-items:center;gap:12px;font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--mist);letter-spacing:.12em}
+.hero .dates::before,.hero .dates::after{content:"";width:38px;height:1px;background:var(--gold);opacity:.6}
+
+/* countdown */
+.count{display:flex;justify-content:center;gap:14px;margin:20px 0 6px}
+.count .cell{min-width:64px;padding:10px 8px;border:1px solid rgba(200,164,92,.4);border-radius:12px;background:rgba(18,32,58,.5)}
+.count .n{font-family:'Cormorant Garamond',serif;font-size:30px;color:var(--gold);font-weight:600;line-height:1}
+.count .u{font-size:11px;letter-spacing:.25em;color:var(--mist);margin-top:4px}
+.count-msg{font-size:13px;color:var(--gold-soft);letter-spacing:.2em;margin-top:6px}
+
+/* TABS */
+.tabs{position:sticky;top:0;z-index:10;background:rgba(18,32,58,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(200,164,92,.3);margin-top:24px}
+.tabs .wrap{display:flex;gap:6px;padding:10px 20px}
+.tab{
+  flex:1;border:1px solid rgba(200,164,92,.35);background:transparent;color:var(--mist);
+  border-radius:10px;padding:9px 4px;cursor:pointer;font-family:'Noto Serif TC',serif;
+  font-size:14px;letter-spacing:.08em;transition:.25s
+}
+.tab small{display:block;font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.2em;opacity:.8}
+.tab.on{background:linear-gradient(160deg,var(--gold),#a9853f);color:#16273f;border-color:var(--gold);font-weight:700}
+.tab:not(.on):hover{color:var(--gold-soft);border-color:var(--gold)}
+
+/* PANEL / TIMELINE */
+.panel{display:none;padding:30px 0 10px;animation:rise .45s ease}
+.panel.on{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.dayhead{display:flex;align-items:baseline;gap:14px;margin-bottom:18px}
+.dayhead h2{font-family:'Noto Serif TC',serif;font-weight:700;font-size:clamp(18px,4.5vw,22px);letter-spacing:.08em}
+.dayhead .dow{margin-left:auto;font-family:'Cormorant Garamond',serif;color:var(--mist);letter-spacing:.2em;white-space:nowrap}
+
+.stop{position:relative;display:grid;grid-template-columns:56px 40px 1fr;gap:0 12px;padding-bottom:8px}
+.stop::before{content:"";position:absolute;left:calc(56px + 12px + 19px);top:42px;bottom:0;width:1px;
+  background:repeating-linear-gradient(180deg,var(--gold) 0 5px,transparent 5px 11px);opacity:.45}
+.stop:last-child::before{display:none}
+.t{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold-soft);text-align:right;padding-top:9px;font-weight:600}
+.node{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--navy-soft),var(--navy-deep));
+  border:1px solid rgba(200,164,92,.55);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.node svg{width:20px;height:20px;stroke:var(--gold);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.node.sun{background:radial-gradient(circle at 50% 60%,#f0b083,#c9694a 65%,var(--navy-deep));border-color:#f0b083}
+.node.sun svg{stroke:#fff3e4}
+
+.stopcard{border:1px solid rgba(200,164,92,.28);border-radius:12px;background:rgba(31,58,95,.35);
+  margin-bottom:14px;overflow:hidden;transition:border-color .25s}
+.stopcard.open{border-color:var(--gold)}
+.stophead{width:100%;display:flex;align-items:center;gap:10px;padding:11px 14px;background:none;border:none;color:var(--cream);cursor:pointer;text-align:left}
+.stophead h3{font-family:'Noto Serif TC',serif;font-weight:600;font-size:16px;letter-spacing:.03em;flex:1}
+.stophead .tag{font-size:11px;letter-spacing:.12em;color:var(--gold);border:1px solid rgba(200,164,92,.5);border-radius:999px;padding:1px 9px;white-space:nowrap}
+.chev{width:16px;height:16px;stroke:var(--gold);fill:none;stroke-width:2;transition:transform .3s;flex-shrink:0}
+.stopcard.open .chev{transform:rotate(180deg)}
+.stopbody{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.stopcard.open .stopbody{max-height:340px}
+.stopbody .inner{padding:2px 16px 14px;border-top:1px dashed rgba(143,163,191,.25)}
+.stopbody p{font-size:13.5px;color:var(--mist);padding-top:10px}
+.stopbody p b{color:var(--gold-soft);font-weight:500}
+.acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.acts a{
+  display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:12.5px;letter-spacing:.1em;
+  color:#16273f;background:linear-gradient(160deg,var(--gold),#b08c46);border-radius:999px;padding:6px 14px;font-weight:500
+}
+.acts a.ghost{background:transparent;color:var(--gold-soft);border:1px solid rgba(200,164,92,.5)}
+.acts svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* CHECKLIST */
+.sect{padding:44px 0 6px}
+.sect>h2{font-family:'Noto Serif TC',serif;font-weight:700;font-size:20px;letter-spacing:.2em;text-align:center}
+.sect>.sub{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);letter-spacing:.25em;font-size:13px;margin-bottom:18px}
+.card{background:linear-gradient(160deg,rgba(42,74,116,.45),rgba(18,32,58,.6));border:1px solid rgba(200,164,92,.3);border-radius:14px;padding:18px 18px 14px}
+.check{display:flex;gap:12px;align-items:flex-start;padding:11px 4px;border-bottom:1px dashed rgba(143,163,191,.2);cursor:pointer;user-select:none}
+.check:last-child{border-bottom:none}
+.box{width:22px;height:22px;border:1.5px solid var(--gold);border-radius:6px;flex-shrink:0;margin-top:2px;
+  display:flex;align-items:center;justify-content:center;transition:.2s}
+.box svg{width:13px;height:13px;stroke:#16273f;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:scale(.5);transition:.2s}
+.check.done .box{background:var(--gold)}
+.check.done .box svg{opacity:1;transform:scale(1)}
+.check .txt b{font-weight:500;color:var(--cream);font-size:14.5px;letter-spacing:.03em}
+.check.done .txt b{text-decoration:line-through;color:var(--mist)}
+.check .txt small{display:block;color:var(--mist);font-size:12.5px}
+.progress{margin:14px 2px 4px;display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--mist);letter-spacing:.1em}
+.progress .bar{flex:1;height:7px;border-radius:4px;background:rgba(143,163,191,.15);overflow:hidden}
+.progress .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));border-radius:4px;transition:width .4s ease}
+
+/* BUDGET */
+.cost .row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px dashed rgba(143,163,191,.22);font-size:13.5px}
+.cost .row:last-child{border:none}
+.cost .lbl{width:7.5em;color:var(--mist);letter-spacing:.05em;flex-shrink:0}
+.cost .bar{flex:1;height:8px;border-radius:4px;background:rgba(143,163,191,.15);overflow:hidden}
+.cost .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));border-radius:4px;transition:width 1s ease}
+.cost .val{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold-soft);white-space:nowrap;font-weight:600}
+.total{margin-top:16px;text-align:center;padding:14px;border:1px solid rgba(200,164,92,.5);border-radius:12px;font-family:'Noto Serif TC',serif;letter-spacing:.1em;font-size:14px}
+.total b{font-family:'Cormorant Garamond',serif;font-size:27px;color:var(--gold);font-weight:600;margin:0 6px}
+
+footer{margin-top:56px;padding:26px 0 40px;border-top:1px solid rgba(200,164,92,.3);text-align:center}
+footer p{font-size:12px;color:var(--mist);letter-spacing:.12em}
+footer .mark{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:15px;margin-top:4px;letter-spacing:.3em}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <div class="eyebrow">Family Summer Voyage</div>
+  <h1>高雄・港都巡航</h1>
+  <div class="dates">7/31 FRI — 8/2 SUN · 5 PERSONS</div>
+  <div class="count" id="count"></div>
+  <div class="count-msg" id="countMsg"></div>
+</header>
+
+<nav class="tabs">
+  <div class="wrap">
+    <button class="tab on" data-p="d1">Day 1<small>7/31 五</small></button>
+    <button class="tab" data-p="d2">Day 2<small>8/1 六</small></button>
+    <button class="tab" data-p="d3">Day 3<small>8/2 日</small></button>
+    <button class="tab" data-p="info">總覽<small>Info</small></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- DAY 1 -->
+<section class="panel on" id="d1">
+  <div class="dayhead"><h2>北高雄線・魚市與河岸之夜</h2><span class="dow">FRI</span></div>
+  <div id="list-d1"></div>
+</section>
+
+<!-- DAY 2 -->
+<section class="panel" id="d2">
+  <div class="dayhead"><h2>賽道・飛行・燈塔夕陽・燒肉</h2><span class="dow">SAT</span></div>
+  <div id="list-d2"></div>
+</section>
+
+<!-- DAY 3 -->
+<section class="panel" id="d3">
+  <div class="dayhead"><h2>西子灣港灣線・北返</h2><span class="dow">SUN</span></div>
+  <div id="list-d3"></div>
+</section>
+
+<!-- INFO -->
+<section class="panel" id="info">
+  <div class="sect" style="padding-top:10px">
+    <h2>行前待辦</h2><div class="sub">tap to check</div>
+    <div class="card" id="todo"></div>
+  </div>
+  <div class="sect">
+    <h2>費用預估</h2><div class="sub">Budget · 5 Persons</div>
+    <div class="card cost" id="cost">
+      <div class="row"><span class="lbl">交通</span><span class="bar"><i data-w="96"></i></span><span class="val">21,500–23,000</span></div>
+      <div class="row"><span class="lbl">住宿 2 晚</span><span class="bar"><i data-w="44"></i></span><span class="val">8,000–11,000</span></div>
+      <div class="row"><span class="lbl">門票體驗</span><span class="bar"><i data-w="28"></i></span><span class="val">5,500–7,000</span></div>
+      <div class="row"><span class="lbl">餐飲</span><span class="bar"><i data-w="54"></i></span><span class="val">10,500–13,500</span></div>
+    </div>
+    <div class="total">總計約<b>NT$ 45,500 – 54,500</b><span style="color:var(--mist);font-size:12px">（不含購物）</span></div>
+  </div>
+  <div class="sect">
+    <h2>盛夏備忘</h2><div class="sub">Notes</div>
+    <div class="card" style="font-size:13.5px;color:var(--mist)">
+      白天體感常破 <b style="color:var(--gold-soft)">38°C</b>，行程已排「早晚戶外、正午室內」，陽傘、水、防曬必帶。午後 14:00–16:00 慣性雷陣雨——科工館、i-Ride、海音剛好都是室內時段。渡輪與夜市備現金（渡輪一卡通可刷，約 NT$40/趟）。公休對照：科工館週一休、鴨肉珍週二休，本次日期均有開。
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>KAOHSIUNG FAMILY VOYAGE · 7/31 – 8/2</p>
+  <div class="mark">— Bon Voyage —</div>
+</footer>
+</main>
+
+<script>
+/* ================= DATA ================= */
+const ICONS={
+ car:'<path d="M4 15h16M6 15v-4h5l3-4h4v8M8 19a1.5 1.5 0 1 0 .01 0M17 19a1.5 1.5 0 1 0 .01 0"/>',
+ fish:'<path d="M3 12q5-6 12 0q-5 6-12 0ZM15 12l5-3v6Z"/>',
+ atom:'<circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/>',
+ market:'<path d="M4 10l8-5 8 5M6 10v9h12v-9M10 19v-5h4v5"/>',
+ boat:'<path d="M3 15h18l-4 5H7ZM12 15V6M12 6l6 6H12"/>',
+ home:'<path d="M12 3l8 6v11H4V9ZM9 20v-6h6v6"/>',
+ kart:'<path d="M4 14q4-8 16-4M6 17a2 2 0 1 0 .01 0M17 17a2 2 0 1 0 .01 0M8 17h7M12 10l2 3"/>',
+ plane:'<path d="M2 16l20-6-20-6 5 6ZM10 18l4 3M14 18l-4 3"/>',
+ ferry:'<path d="M3 14h18l-3 5H6ZM7 14v-4h10v4M12 10V6"/><path d="M2 21q3-2 5 0t5 0t5 0t5 0"/>',
+ light:'<path d="M12 20V9l-3 3M12 9l3 3M8 20h8M10 9h4l-2-4Z"/>',
+ grill:'<path d="M4 8h16M4 12h16M4 16h16M7 8q1-3 2 0M12 12q1-3 2 0M16 16q1-3 2 0"/>',
+ fort:'<path d="M4 20h16M6 20v-8h12v8M6 12l6-6 6 6M9 20v-4h2v4M13 20v-4h2v4"/>',
+ noodle:'<path d="M5 4v7a3 3 0 0 0 6 0V4M8 4v16M17 4c-2 0-3 3-3 6h3v10"/>',
+ music:'<path d="M6 18V8l4-4v14M14 18V6q4 2 4 6v6M4 18h16"/>',
+ whale:'<path d="M3 16q9-10 18 0M7 16v3M12 12v7M17 16v3M3 19h18"/>',
+ back:'<path d="M4 12h13M13 6l6 6-6 6M4 6v12"/>',
+ train:'<path d="M5 16V8a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8M5 16h14M8 19a1 1 0 1 0 .01 0M16 19a1 1 0 1 0 .01 0M5 11h14"/>'
+};
+const DAYS={
+d1:[
+ {t:'11:30',i:'car',n:'高鐵抵左營・iRent 取車',d:'App 感應開門即走，行李放後車廂整天不進房。車型選 <b>Corolla Cross／Sienta</b>。',map:'高鐵左營站'},
+ {t:'12:30',i:'fish',n:'蚵仔寮觀光漁港魚市',tag:'午餐',d:'週五 12:30 開市，面對面看現流仔拍賣，買了請海產街代客料理。',map:'蚵仔寮觀光漁港魚市'},
+ {t:'14:30',i:'atom',n:'國立科學工藝博物館',d:'冷氣展館避正午高溫，互動實驗玩到 17:00 閉館。<b>學生票 NT$70</b>，館內停車方便。',map:'國立科學工藝博物館',tel:'073800089'},
+ {t:'17:30',i:'market',n:'自由黃昏市場',tag:'晚餐',d:'在地人的傍晚廚房——熟食滷味邊走邊吃。<b>17:30 前進場</b>，18:30 後攤商陸續收攤。',map:'高雄自由黃昏市場'},
+ {t:'19:15',i:'boat',n:'愛河「愛之船」夜遊',d:'25 分鐘航程穿過河岸燈影，全票約 NT$120，車停河畔周邊停車場。',map:'愛之船國賓站',tel:'072811313'},
+ {t:'21:00',i:'home',n:'回七賢館',d:'飯店旁就是六合夜市，還有餘力就補一杯木瓜牛奶。',map:'樂逸旅居七賢館',tel:'072369818'}
+],
+d2:[
+ {t:'10:30',i:'kart',n:'SKM Park 草衙・半日',d:'鈴鹿賽道排上午、outlet 掃貨排中午，孩子分頭行動再集合。<b>午餐館內美食街</b>，14:00 離場。',map:'SKM Park Outlets 高雄草衙',tel:'077969999'},
+ {t:'14:30',i:'plane',n:'i-Ride 飛行劇院',d:'懸空座椅 5D 飛越台灣。<b>先訂 14:30–15:00 場次</b>、提前 30 分報到；招牌不明顯，導航軟體園區停車場。身高 120cm 以上。',map:'i-Ride KAOHSIUNG',tel:'075372858'},
+ {t:'16:40',i:'ferry',n:'鼓山渡輪 → 旗津',d:'車停哨船頭／漁人碼頭停車場，人搭渡輪 10 分鐘過港，一卡通可刷。',map:'鼓山輪渡站'},
+ {t:'17:10',i:'light',sun:1,n:'旗後燈塔＋OCEAN BAKERY',tag:'夕陽 18:40',d:'步行上山 15 分鐘，白色燈塔配可頌與霜淇淋，看夕陽沉進台灣海峽。營業至 21:00。',map:'旗後燈塔'},
+ {t:'19:45',i:'grill',n:'慶花苑日式燒肉・吃到飽',tag:'晚餐',d:'4.7 星、回飯店順路車程 5 分鐘，每人約 700–900。<b>務必訂位（週六 20:00・5 位）</b>。',map:'慶花苑日式燒肉',tel:'072416833'},
+ {t:'21:45',i:'home',n:'回七賢館',d:'吃飽開 5 分鐘就到家。',map:'樂逸旅居七賢館'}
+],
+d3:[
+ {t:'10:15',i:'fort',n:'打狗英國領事館文化園區',d:'退房行李上車，趁上午不熱登山上官邸——紅磚拱廊面海。門票 NT$99，車停哨船頭停車場。',map:'打狗英國領事館文化園區',tel:'075250100'},
+ {t:'12:15',i:'noodle',n:'鹽埕老店雙拼',tag:'午餐',d:'<b>鴨肉珍</b>（米其林必比登）＋<b>港園牛肉麵</b>（乾拌招牌），兩店步行 5 分鐘內。',map:'鴨肉珍'},
+ {t:'14:00',i:'music',n:'高雄流行音樂中心・真愛碼頭',d:'海音六角幾何建築群是港灣新地標，室內冷氣避午後雷陣雨剛好。',map:'高雄流行音樂中心'},
+ {t:'15:15',i:'whale',n:'高雄港旅運中心',d:'鯨魚曲線白色地標，頂樓景觀平台把整座港看進眼裡再說再見。',map:'高雄港旅運中心'},
+ {t:'16:30',i:'back',n:'左營還車・伴手禮',d:'17:15 前 App 還車結算，站內新光三越補齊伴手禮。',map:'高鐵左營站'},
+ {t:'18:00',i:'train',n:'高鐵北返',d:'週日 18:00 班次，帶著曬痕與伴手禮回台北。'}
+]};
+const TODO=[
+ {b:'iRent 註冊＋駕照審核',s:'出發前一週辦妥（審核 1–2 天）；預約左營站 7/31 取車、8/2 還車，加第二駕駛為共同承租人'},
+ {b:'慶花苑燒肉訂位 07-241-6833',s:'8/1（六）20:00・5 位'},
+ {b:'i-Ride 場次票（官網／KKday）',s:'8/1（六）14:30–15:00 場'},
+ {b:'高鐵早鳥票',s:'回程 8/2 18:00 左營發車，最多可省 NT$5,000'},
+ {b:'飯店確認含早餐＋停車',s:'樂逸七賢館 07-236-9818'}
+];
+
+/* ================= RENDER ================= */
+function esc(s){return s}
+function stopHTML(o,idx,day){
+  const nav=o.map?`<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.map+' 高雄')}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>導航</a>`:'';
+  const tel=o.tel?`<a class="ghost" href="tel:${o.tel}"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>撥號</a>`:'';
+  return `<div class="stop">
+    <div class="t">${o.t}</div>
+    <div class="node${o.sun?' sun':''}"><svg viewBox="0 0 24 24">${ICONS[o.i]}</svg></div>
+    <div class="stopcard" data-k="${day}-${idx}">
+      <button class="stophead" aria-expanded="false">
+        <h3>${o.n}</h3>
+        ${o.tag?`<span class="tag">${o.tag}</span>`:''}
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="stopbody"><div class="inner">
+        <p>${o.d}</p>
+        <div class="acts">${nav}${tel}</div>
+      </div></div>
+    </div>
+  </div>`;
+}
+for(const day of ['d1','d2','d3']){
+  document.getElementById('list-'+day).innerHTML=DAYS[day].map((o,i)=>stopHTML(o,i,day)).join('');
+}
+/* expand/collapse */
+document.querySelectorAll('.stophead').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const card=btn.parentElement, open=card.classList.contains('open');
+    card.closest('.panel').querySelectorAll('.stopcard.open').forEach(c=>{c.classList.remove('open');c.querySelector('.stophead').setAttribute('aria-expanded','false')});
+    if(!open){card.classList.add('open');btn.setAttribute('aria-expanded','true')}
+  });
+});
+
+/* tabs */
+const tabs=document.querySelectorAll('.tab'), panels=document.querySelectorAll('.panel');
+tabs.forEach(tb=>tb.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.remove('on'));tb.classList.add('on');
+  panels.forEach(p=>p.classList.toggle('on',p.id===tb.dataset.p));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(tb.dataset.p==='info') animateBars();
+}));
+
+/* checklist (in-memory) */
+const todoBox=document.getElementById('todo');
+todoBox.innerHTML=TODO.map((o,i)=>`
+  <div class="check" data-i="${i}" role="checkbox" aria-checked="false" tabindex="0">
+    <span class="box"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>
+    <span class="txt"><b>${o.b}</b><small>${o.s}</small></span>
+  </div>`).join('')+`
+  <div class="progress"><span id="pctTxt">0 / ${TODO.length}</span><span class="bar"><i id="pctBar"></i></span></div>`;
+function updProg(){
+  const done=todoBox.querySelectorAll('.check.done').length;
+  document.getElementById('pctTxt').textContent=done+' / '+TODO.length+(done===TODO.length?' · 全部完成，出發！':'');
+  document.getElementById('pctBar').style.width=(done/TODO.length*100)+'%';
+}
+todoBox.querySelectorAll('.check').forEach(c=>{
+  const toggle=()=>{c.classList.toggle('done');c.setAttribute('aria-checked',c.classList.contains('done'));updProg()};
+  c.addEventListener('click',toggle);
+  c.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();toggle()}});
+});
+updProg();
+
+/* budget bars */
+let barsDone=false;
+function animateBars(){
+  if(barsDone)return;barsDone=true;
+  document.querySelectorAll('#cost .bar i').forEach(b=>{requestAnimationFrame(()=>b.style.width=b.dataset.w+'%')});
+}
+
+/* countdown */
+const target=new Date('2026-07-31T08:00:00+08:00');
+const endTrip=new Date('2026-08-02T20:00:00+08:00');
+const cEl=document.getElementById('count'),mEl=document.getElementById('countMsg');
+function pad(n){return String(n).padStart(2,'0')}
+function tick(){
+  const now=new Date();
+  if(now>=target&&now<=endTrip){cEl.innerHTML='';mEl.textContent='旅程進行中 · BON VOYAGE';return}
+  if(now>endTrip){cEl.innerHTML='';mEl.textContent='旅程圓滿 · 期待下一次出發';return}
+  let s=Math.floor((target-now)/1000);
+  const d=Math.floor(s/86400);s-=d*86400;
+  const h=Math.floor(s/3600);s-=h*3600;
+  const m=Math.floor(s/60);s-=m*60;
+  cEl.innerHTML=[[d,'DAYS'],[pad(h),'HRS'],[pad(m),'MIN'],[pad(s),'SEC']]
+    .map(x=>`<div class="cell"><div class="n">${x[0]}</div><div class="u">${x[1]}</div></div>`).join('');
+  mEl.textContent='距離出發';
+}
+tick();setInterval(tick,1000);
+</script>
+</body>
+</html>
