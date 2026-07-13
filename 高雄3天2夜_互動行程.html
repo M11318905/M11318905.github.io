@@ -152,7 +152,7 @@ footer .mark{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(
 
 <!-- DAY 2 -->
 <section class="panel" id="d2">
-  <div class="dayhead"><h2>賽道・飛行・燈塔夕陽・燒肉</h2><span class="dow">SAT</span></div>
+  <div class="dayhead"><h2>賽道・飛行・燈塔夕陽・旗津海產夜</h2><span class="dow">SAT</span></div>
   <div id="list-d2"></div>
 </section>
 
@@ -174,9 +174,9 @@ footer .mark{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(
       <div class="row"><span class="lbl">交通</span><span class="bar"><i data-w="96"></i></span><span class="val">21,500–23,000</span></div>
       <div class="row"><span class="lbl">住宿 2 晚</span><span class="bar"><i data-w="44"></i></span><span class="val">8,000–11,000</span></div>
       <div class="row"><span class="lbl">門票體驗</span><span class="bar"><i data-w="28"></i></span><span class="val">5,500–7,000</span></div>
-      <div class="row"><span class="lbl">餐飲</span><span class="bar"><i data-w="54"></i></span><span class="val">10,500–13,500</span></div>
+      <div class="row"><span class="lbl">餐飲</span><span class="bar"><i data-w="50"></i></span><span class="val">9,500–12,500</span></div>
     </div>
-    <div class="total">總計約<b>NT$ 45,500 – 54,500</b><span style="color:var(--mist);font-size:12px">（不含購物）</span></div>
+    <div class="total">總計約<b>NT$ 44,500 – 53,500</b><span style="color:var(--mist);font-size:12px">（不含購物）</span></div>
   </div>
   <div class="sect">
     <h2>盛夏備忘</h2><div class="sub">Notes</div>
@@ -196,6 +196,7 @@ footer .mark{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(
 /* ================= DATA ================= */
 const ICONS={
  car:'<path d="M4 15h16M6 15v-4h5l3-4h4v8M8 19a1.5 1.5 0 1 0 .01 0M17 19a1.5 1.5 0 1 0 .01 0"/>',
+ coffee:'<path d="M4 9h12v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4ZM16 10h2a2 2 0 0 1 0 4h-2M7 5q0 1.5 1 2M11 5q0 1.5 1 2"/>',
  fish:'<path d="M3 12q5-6 12 0q-5 6-12 0ZM15 12l5-3v6Z"/>',
  atom:'<circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/>',
  market:'<path d="M4 10l8-5 8 5M6 10v9h12v-9M10 19v-5h4v5"/>',
@@ -226,9 +227,11 @@ d2:[
  {t:'10:30',i:'kart',n:'SKM Park 草衙・半日',d:'鈴鹿賽道排上午、outlet 掃貨排中午，孩子分頭行動再集合。<b>午餐館內美食街</b>，14:00 離場。',map:'SKM Park Outlets 高雄草衙',tel:'077969999'},
  {t:'14:30',i:'plane',n:'i-Ride 飛行劇院',d:'懸空座椅 5D 飛越台灣。<b>先訂 14:30–15:00 場次</b>、提前 30 分報到；招牌不明顯，導航軟體園區停車場。身高 120cm 以上。',map:'i-Ride KAOHSIUNG',tel:'075372858'},
  {t:'16:40',i:'ferry',n:'鼓山渡輪 → 旗津',d:'車停哨船頭／漁人碼頭停車場，人搭渡輪 10 分鐘過港，一卡通可刷。',map:'鼓山輪渡站'},
- {t:'17:10',i:'light',sun:1,n:'旗後燈塔＋OCEAN BAKERY',tag:'夕陽 18:40',d:'步行上山 15 分鐘，白色燈塔配可頌與霜淇淋，看夕陽沉進台灣海峽。營業至 21:00。',map:'旗後燈塔'},
- {t:'19:45',i:'grill',n:'慶花苑日式燒肉・吃到飽',tag:'晚餐',d:'4.7 星、回飯店順路車程 5 分鐘，每人約 700–900。<b>務必訂位（週六 20:00・5 位）</b>。',map:'慶花苑日式燒肉',tel:'072416833'},
- {t:'21:45',i:'home',n:'回七賢館',d:'吃飽開 5 分鐘就到家。',map:'樂逸旅居七賢館'}
+ {t:'17:10',i:'light',sun:1,n:'登旗後燈塔',tag:'夕陽 18:40',d:'步行上山 15 分鐘，白色燈塔俯瞰高雄港，18:40 看夕陽沉進台灣海峽、港區燈火點亮。',map:'旗後燈塔'},
+ {t:'19:00',i:'coffee',n:'OCEAN BAKERY 吃冰喝咖啡',d:'燈塔園區內（4.9 星），可頌＋霜淇淋簡單休息，補完體力再下山。',map:'OCEAN BAKERY 燈塔店'},
+ {t:'19:30',i:'fish',n:'金聖春海產',tag:'晚餐',d:'旗津中洲的老牌活海鮮（4.3 星），距旗後約 5 公里——<b>19:15 搭計程車前往（約 10 分鐘）</b>，點當日現流。<b>訂位並請店家協助回程叫車</b>。',map:'金聖春海產',tel:'075713603'},
+ {t:'20:45',i:'market',n:'旗津老街散步＋烤魷魚',d:'計程車回旗後（約 10 分鐘），飯後老街消食，補一串現烤魷魚。',map:'旗津老街'},
+ {t:'21:10',i:'ferry',n:'渡輪返鼓山・取車回飯店',d:'約 21:45 抵七賢館，圓滿的一天。',map:'旗津輪渡站'}
 ],
 d3:[
  {t:'10:15',i:'fort',n:'打狗英國領事館文化園區',d:'退房行李上車，趁上午不熱登山上官邸——紅磚拱廊面海。門票 NT$99，車停哨船頭停車場。',map:'打狗英國領事館文化園區',tel:'075250100'},
@@ -240,7 +243,7 @@ d3:[
 ]};
 const TODO=[
  {b:'iRent 註冊＋駕照審核',s:'出發前一週辦妥（審核 1–2 天）；預約左營站 7/31 取車、8/2 還車，加第二駕駛為共同承租人'},
- {b:'慶花苑燒肉訂位 07-241-6833',s:'8/1（六）20:00・5 位'},
+ {b:'金聖春海產訂位 07-571-3603',s:'8/1（六）19:30・5 位；順便請店家協助 20:30 回旗後叫車'},
  {b:'i-Ride 場次票（官網／KKday）',s:'8/1（六）14:30–15:00 場'},
  {b:'高鐵早鳥票',s:'回程 8/2 18:00 左營發車，最多可省 NT$5,000'},
  {b:'飯店確認含早餐＋停車',s:'樂逸七賢館 07-236-9818'}
