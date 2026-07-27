@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>估價輔助圖台 — 原型（分類彙總版）</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+  :root { --panel: 380px; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; font-family: "Segoe UI", "Microsoft JhengHei", sans-serif; }
+  #app { display: flex; height: 100%; }
+  #panel { width: var(--panel); flex: 0 0 var(--panel); height: 100%; overflow-y: auto;
+           background: #f8fafc; border-right: 1px solid #e2e8f0; padding: 16px; }
+  #map { flex: 1; height: 100%; }
+  h1 { font-size: 18px; margin: 0 0 4px; color: #1e40af; }
+  .sub { font-size: 12px; color: #64748b; margin-bottom: 14px; }
+  .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 12px; }
+  .card h2 { font-size: 13px; margin: 0 0 8px; color: #334155; display:flex; justify-content:space-between; align-items:center; }
+  label { font-size: 12px; color: #475569; display: block; margin-bottom: 4px; }
+  input[type=text], select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 8px; font-size:14px; font-family:inherit; }
+  .row { display: flex; gap: 8px; } .row > * { flex: 1; }
+  button { padding: 9px 10px; border: 0; border-radius: 8px; background: #2563eb; color: #fff; cursor: pointer; font-weight: 600; font-size:14px; font-family:inherit; }
+  button:hover { background: #1d4ed8; }
+  button.ghost { background: #e2e8f0; color: #334155; } button.ghost:hover { background: #cbd5e1; }
+  button:disabled { opacity: .5; cursor: default; }
+  .hint { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+
+  #caseList { display:flex; flex-direction:column; gap:8px; }
+  .case { border:1px solid #e2e8f0; border-radius:10px; padding:10px; background:#fff; }
+  .case.active { border-color:#2563eb; box-shadow:0 0 0 2px #dbeafe; }
+  .case.hidden .cname { color:#94a3b8; text-decoration:line-through; }
+  .case-top { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+  .cname { font-weight:700; font-size:14px; color:#0f172a; }
+  .cmeta { font-size:11px; color:#64748b; margin-top:2px; }
+  .acts { display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
+  .acts button { padding:5px 8px; font-size:13px; background:#0f766e; }
+  .acts button:hover { background:#115e59; }
+  .acts button.del { background:#dc2626; } .acts button.del:hover { background:#b91c1c; }
+  .acts button.off { background:#94a3b8; }
+  .empty { font-size:12px; color:#94a3b8; text-align:center; padding:12px 0; }
+
+  .legend { display:flex; flex-direction:column; gap:3px; }
+  .leggrp { font-size:11px; font-weight:700; color:#1e40af; margin-top:6px; }
+  .legrow { display:flex; align-items:center; justify-content:space-between; font-size:13px; padding-left:6px; }
+  .legleft { display:flex; align-items:center; gap:8px; }
+  .dot { width:20px; height:20px; border-radius:50%; display:grid; place-items:center; font-size:12px; color:#fff; }
+  .count { font-variant-numeric:tabular-nums; color:#64748b; font-size:12px; }
+  .poi-pin { width:26px; height:26px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); display:grid; place-items:center; box-shadow:0 1px 4px rgba(0,0,0,.4); border:2px solid #fff; }
+  .poi-pin span { transform:rotate(45deg); font-size:12px; }
+  #status { font-size:12px; color:#475569; min-height:16px; margin-top:8px; }
+  .toolbar { display:flex; gap:8px; margin-top:10px; }
+  .toolbar button { flex:1; background:#0f766e; } .toolbar button:hover { background:#115e59; }
+
+  #modal { position:fixed; inset:0; background:rgba(15,23,42,.5); display:none; place-items:center; z-index:2000; }
+  #modal.open { display:grid; }
+  .modal-box { background:#fff; border-radius:12px; max-width:92vw; max-height:85vh; overflow:auto; padding:20px; box-shadow:0 10px 40px rgba(0,0,0,.3); }
+  .modal-box h2 { margin:0 0 12px; font-size:16px; color:#1e40af; display:flex; justify-content:space-between; align-items:center; gap:20px; }
+  .modal-box table { border-collapse:collapse; font-size:13px; }
+  .modal-box th, .modal-box td { border:1px solid #e2e8f0; padding:7px 12px; text-align:center; white-space:nowrap; }
+  .modal-box th { background:#f1f5f9; color:#334155; }
+  .modal-box td.cat { text-align:left; font-weight:600; }
+  .modal-box td.grp { background:#f8fafc; font-weight:700; color:#1e40af; vertical-align:middle; }
+  .modal-box tr.total td { background:#fef3c7; font-weight:700; }
+  .modal-box .near { color:#94a3b8; font-size:11px; }
+  .modal-actions { margin-top:14px; display:flex; gap:8px; justify-content:flex-end; }
+  .x { cursor:pointer; background:#e2e8f0; color:#334155; border:0; border-radius:6px; padding:4px 10px; font-weight:700; }
+
+  #printHeader, #printLegend { display:none; }
+  @media print {
+    #panel, .leaflet-control-container, #modal { display:none !important; }
+    #app { display:block; } #map { position:fixed; inset:0; width:100%; height:100%; }
+    #printHeader { display:block; position:fixed; top:0; left:0; right:0; z-index:9999; background:#fff; border-bottom:2px solid #1e40af; padding:8px 16px; }
+    #printHeader .t { font-size:16px; font-weight:800; color:#1e40af; }
+    #printHeader .m { font-size:12px; color:#475569; }
+    #printLegend { display:block; position:fixed; right:16px; bottom:16px; z-index:9999; background:rgba(255,255,255,.95); border:1px solid #94a3b8; border-radius:8px; padding:10px 12px; font-size:12px; }
+    #printLegend .lr { display:flex; align-items:center; gap:6px; margin:2px 0; }
+    #printLegend .sw { width:12px; height:12px; border-radius:50%; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="panel">
+    <h1>估價輔助圖台 · 原型</h1>
+    <div class="sub">分類彙總 · 地籍疊層 · 實價登錄 · Excel 匯出</div>
+
+    <div class="card">
+      <h2>新增標的</h2>
+      <label>地址定位（Esri 地理編碼，限台灣）</label>
+      <input id="addr" type="text" placeholder="例：新北市土城區中央路三段" />
+      <label style="margin-top:2px">半徑
+        <select id="radius" style="margin-top:4px">
+          <option value="300">300 m</option><option value="500">500 m</option>
+          <option value="800" selected>800 m</option><option value="1000">1000 m</option>
+          <option value="1500">1500 m</option>
+        </select>
+      </label>
+      <div class="row">
+        <button id="btnGeocode">地址定位新增</button>
+        <button id="btnClickMode" class="ghost">點地圖新增</button>
+      </div>
+      <div class="hint">每次定位/點擊建立一筆新標的，並自動查詢周邊與比較案例。</div>
+    </div>
+
+    <div class="card">
+      <h2>案例管理 <span id="caseCount" class="count"></span></h2>
+      <div id="caseList"><div class="empty">尚無標的，請先新增。</div></div>
+      <div class="toolbar">
+        <button id="btnCompare">📊 比對表</button>
+        <button id="btnPrint">🖨️ 列印套繪</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>作用中標的 · 周邊機能分類</h2>
+      <div id="legend" class="legend"></div>
+      <div id="status">尚未設定標的。</div>
+    </div>
+    <div class="sub">底圖/疊層於右上切換：電子地圖·灰階·正射／地籍圖·使用分區。</div>
+  </aside>
+  <div id="map"></div>
+</div>
+
+<div id="modal"><div class="modal-box">
+  <h2><span id="modalTitle"></span><button class="x" onclick="closeModal()">✕</button></h2>
+  <div id="modalBody"></div>
+  <div class="modal-actions">
+    <button id="modalExport">⬇️ 匯出 (Excel)</button>
+    <button class="ghost" onclick="closeModal()">關閉</button>
+  </div>
+</div></div>
+
+<div id="printHeader"><div class="t" id="phTitle"></div><div class="m" id="phMeta"></div></div>
+<div id="printLegend"><div id="plBody"></div></div>
+
+<script>
+// ---------- 底圖 + 疊圖層 ----------
+const nlscEmap = L.tileLayer('https://wmts.nlsc.gov.tw/wmts/EMAP/default/GoogleMapsCompatible/{z}/{y}/{x}.png', { maxZoom:20, attribution:'NLSC' });
+const grey  = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', { maxZoom:20, attribution:'CARTO' });
+const photo = L.tileLayer('https://wmts.nlsc.gov.tw/wmts/PHOTO2/default/GoogleMapsCompatible/{z}/{y}/{x}.png', { maxZoom:20, attribution:'NLSC 正射' });
+const osm   = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'© OSM' });
+const cadastre = L.tileLayer('https://wmts.nlsc.gov.tw/wmts/LANDSECT/default/GoogleMapsCompatible/{z}/{y}/{x}.png', { maxZoom:20, opacity:0.9, attribution:'NLSC 地籍段界' });
+const landuse  = L.tileLayer('https://wmts.nlsc.gov.tw/wmts/LUIMAP/default/GoogleMapsCompatible/{z}/{y}/{x}.png', { maxZoom:20, opacity:0.65, attribution:'NLSC 國土利用' });
+const map = L.map('map', { center:[24.9720,121.4430], zoom:15, layers:[nlscEmap] });
+L.control.layers(
+  { 'NLSC 電子地圖(彩色)':nlscEmap, 'NLSC 灰階(黑白)':grey, 'NLSC 正射影像':photo, 'OpenStreetMap':osm },
+  { '🗺️ 地籍圖（段界）':cadastre, '🟩 國土利用/使用分區':landuse },
+  { position:'topright', collapsed:false }
+).addTo(map);
+L.control.scale({ imperial:false }).addTo(map);
+
+// ---------- 估價分類體系（比照 REAA Excel）----------
+const GROUPS = ['接近條件','居住舒適性','生活便利性','停車便利性','嫌惡設施'];
+const FACILITIES = [
+  { group:'接近條件',  name:'捷運站出入口', color:'#0891b2', emoji:'🚇', match:t => t.railway==='subway_entrance' },
+  { group:'接近條件',  name:'公車站',      color:'#0e7490', emoji:'🚌', match:t => t.highway==='bus_stop' || (t.public_transport==='platform' && t.bus==='yes') },
+  { group:'接近條件',  name:'高鐵站',      color:'#155e75', emoji:'🚄', match:t => t.railway==='station' && /高鐵|THSR|high_speed/i.test((t.name||'')+(t.operator||'')+(t.station||'')) },
+  { group:'接近條件',  name:'火車站',      color:'#164e63', emoji:'🚉', match:t => t.railway==='station' && t.station!=='subway' && !/高鐵|捷運/.test(t.name||'') },
+  { group:'居住舒適性', name:'學校',        color:'#7c3aed', emoji:'🎓', match:t => ['school','college','university','kindergarten'].includes(t.amenity) },
+  { group:'居住舒適性', name:'公園',        color:'#16a34a', emoji:'🌳', match:t => ['park','garden'].includes(t.leisure) },
+  { group:'生活便利性', name:'市場',        color:'#ca8a04', emoji:'🏬', match:t => t.amenity==='marketplace' || ['supermarket','mall'].includes(t.shop) },
+  { group:'生活便利性', name:'金融機構',    color:'#0d9488', emoji:'🏦', match:t => t.amenity==='bank' || t.amenity==='post_office' },
+  { group:'生活便利性', name:'醫療',        color:'#dc2626', emoji:'🏥', match:t => ['hospital','clinic','doctors','pharmacy'].includes(t.amenity) || !!t.healthcare },
+  { group:'生活便利性', name:'便利商店',    color:'#2563eb', emoji:'🏪', match:t => t.shop==='convenience' },
+  { group:'停車便利性', name:'停車場',      color:'#ea580c', emoji:'🅿', match:t => t.amenity==='parking' },
+  { group:'嫌惡設施',  name:'嫌惡設施',    color:'#4b5563', emoji:'⚠', match:t => t.amenity==='fuel' || t.amenity==='funeral_hall' || t.shop==='funeral_directors' || t.landuse==='cemetery' || t.amenity==='grave_yard' || t.power==='substation' },
+];
+const FAC_BY_NAME = Object.fromEntries(FACILITIES.map(f=>[f.name,f]));
+function classify(t){ if(!t) return null; return FACILITIES.find(f=>f.match(t)) || null; }
+
+// ---------- 狀態 ----------
+let cases = [], activeId = null, seq = 0, clickMode = false, clickIdx = 0;
+
+// ---------- Overpass ----------
+const OVERPASS = ['https://overpass.kumi.systems/api/interpreter','https://overpass.private.coffee/api/interpreter','https://overpass-api.de/api/interpreter','https://maps.mail.ru/osm/tools/overpass/api/interpreter'];
+// 多站台「併發競速」：同時打所有站台，誰先成功回傳合法 JSON 就用誰
+async function fetchOverpass(q){
+  const attempts = OVERPASS.map(ep => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(()=>ctrl.abort(), 30000);   // 每站最多等 30 秒
+    return fetch(ep, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'data='+encodeURIComponent(q), signal:ctrl.signal })
+      .then(async r => { clearTimeout(timer); if(!r.ok) throw new Error('http '+r.status);
+        const j = JSON.parse(await r.text()); if(!j || !j.elements) throw new Error('bad'); return j; })
+      .catch(e => { clearTimeout(timer); throw e; });
+  });
+  try { return await Promise.any(attempts); } catch { return null; }
+}
+function demoPOIs(lat,lng,r){
+  const els=[];
+  FACILITIES.forEach(f=>{
+    const n = f.name==='高鐵站'||f.name==='火車站' ? (Math.random()<0.3?1:0) : Math.floor(Math.random()*8);
+    for(let i=0;i<n;i++){ const a=Math.random()*2*Math.PI, d=Math.sqrt(Math.random())*r;
+      els.push({ lat:lat+(d*Math.cos(a))/111000, lon:lng+(d*Math.sin(a))/(111000*Math.cos(lat*Math.PI/180)),
+        tags:{ name:`${f.name}示範${i+1}`, _fac:f.name } }); }
+  });
+  return els;
+}
+
+// ---------- 比較案例（實價登錄，模擬）----------
+const STREETS=['中央路','金城路','中華路','學府路','明德路','裕民路','青雲路','延吉街','廣明街','沛陂路'];
+const TYPES=['住宅大樓','華廈','公寓','套房','透天厝'];
+function genDeals(lat,lng,r,n){
+  const deals=[];
+  for(let i=0;i<n;i++){ const a=Math.random()*2*Math.PI, d=Math.sqrt(Math.random())*r;
+    const unit=Math.round((28+Math.random()*40)*10)/10, ping=Math.round((15+Math.random()*45)*10)/10;
+    const fl=Math.floor(Math.random()*14)+1, tf=fl+Math.floor(Math.random()*8);
+    const yy=2024+Math.floor(Math.random()*3), mm=String(Math.floor(Math.random()*12)+1).padStart(2,'0');
+    deals.push({ '交易年月':`${yy}/${mm}`, 地址:`${STREETS[Math.floor(Math.random()*STREETS.length)]}${Math.floor(Math.random()*300)+1}號`,
+      型態:TYPES[Math.floor(Math.random()*TYPES.length)], '總價(萬)':Math.round(unit*ping), '單價(萬/坪)':unit,
+      建坪:ping, 屋齡:Math.floor(Math.random()*45)+1, 樓層:`${fl}/${tf}`,
+      lat:lat+(d*Math.cos(a))/111000, lng:lng+(d*Math.sin(a))/(111000*Math.cos(lat*Math.PI/180)) });
+  }
+  return deals;
+}
+function dealStats(ds){ const u=ds.map(d=>d['單價(萬/坪)']).sort((a,b)=>a-b), n=u.length;
+  return { n, avg:u.reduce((s,x)=>s+x,0)/n, med:n%2?u[(n-1)/2]:(u[n/2-1]+u[n/2])/2, min:u[0], max:u[n-1], avgAge:ds.reduce((s,x)=>s+x.屋齡,0)/n }; }
+
+// ---------- 新增標的 ----------
+async function addCase(lat,lng,name){
+  const radius=+document.getElementById('radius').value, id=++seq;
+  const cluster=L.markerClusterGroup({ maxClusterRadius:45 });
+  const circle=L.circle([lat,lng],{ radius, color:'#b91c1c', weight:2, fillColor:'#ef4444', fillOpacity:0.06 });
+  const marker=L.marker([lat,lng],{ icon:L.divIcon({ className:'', iconSize:[34,34], iconAnchor:[17,32],
+    html:'<div style="font-size:34px;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))">📍</div>' }) })
+    .bindTooltip(name,{ permanent:true, direction:'top', offset:[0,-30] });
+  const deals=genDeals(lat,lng,radius,18);
+  const dealLayer=L.layerGroup(deals.map(d=>L.marker([d.lat,d.lng],{ icon:L.divIcon({ className:'', iconSize:[24,24], iconAnchor:[12,24],
+    html:'<div class="poi-pin" style="background:#d97706"><span>💰</span></div>' }) })
+    .bindPopup(`<b>${d.地址}</b><br>${d.型態}｜${d['交易年月']}<br>總價 ${d['總價(萬)']} 萬｜<b>單價 ${d['單價(萬/坪)']} 萬/坪</b><br>建坪 ${d.建坪}｜屋齡 ${d.屋齡} 年｜樓層 ${d.樓層}`)));
+  const layer=L.layerGroup([circle,dealLayer,marker,cluster]).addTo(map);
+  const c={ id, name, lat, lng, radius, visible:true, poiRows:[], counts:null, deals, layer, cluster, marker, circle };
+  cases.push(c); setActive(id); map.setView([lat,lng],16); renderCases();
+  await queryCase(c);
+}
+
+// ---------- 查詢周邊（依分類）----------
+async function queryCase(c){
+  setStatus(`「${c.name}」查詢周邊中…（可能需數秒）`);
+  c.cluster.clearLayers(); c.poiRows=[];
+  const A=`(around:${c.radius},${c.lat},${c.lng})`;
+  const q=`[out:json][timeout:60];(
+    nwr["railway"="subway_entrance"]${A}; nwr["highway"="bus_stop"]${A}; nwr["railway"="station"]${A};
+    nwr["amenity"~"school|college|university|kindergarten|marketplace|bank|post_office|hospital|clinic|doctors|pharmacy|parking|fuel|funeral_hall|grave_yard"]${A};
+    nwr["leisure"~"park|garden"]${A}; nwr["shop"~"supermarket|mall|convenience|funeral_directors"]${A};
+    nwr["landuse"="cemetery"]${A}; nwr["power"="substation"]${A};
+  ); out center 600;`;
+  const data=await fetchOverpass(q);
+  let elements, demo=false;
+  if(data && data.elements) elements=data.elements; else { elements=demoPOIs(c.lat,c.lng,c.radius); demo=true; }
+  c.demo=demo;
+
+  const counts={}; FACILITIES.forEach(f=>counts[f.name]=0);
+  const seen=new Set();
+  elements.forEach(el=>{
+    const lat=el.lat??(el.center&&el.center.lat), lon=el.lon??(el.center&&el.center.lon);
+    if(lat==null||lon==null) return;
+    const fac = el.tags&&el.tags._fac ? FAC_BY_NAME[el.tags._fac] : classify(el.tags);
+    if(!fac) return;
+    const key=fac.name+'@'+lat.toFixed(5)+','+lon.toFixed(5); if(seen.has(key)) return; seen.add(key);
+    counts[fac.name]++;
+    const nm=(el.tags&&(el.tags.name||el.tags['name:zh']))||fac.name;
+    const dist=Math.round(map.distance([c.lat,c.lng],[lat,lon]));
+    c.poiRows.push({ group:fac.group, facility:fac.name, name:nm, dist, lat, lng:lon });
+    c.cluster.addLayer(L.marker([lat,lon],{ icon:L.divIcon({ className:'', iconSize:[26,26], iconAnchor:[13,26],
+      html:`<div class="poi-pin" style="background:${fac.color}"><span>${fac.emoji}</span></div>` }) })
+      .bindPopup(`<b>${nm}</b><br>${fac.group}·${fac.name}｜距標的 ${dist} m`));
+  });
+  c.counts=counts; renderCases();
+  if(c.id===activeId){ renderLegend(counts);
+    setStatus(`「${c.name}」周邊 <b>${c.poiRows.length}</b> 點（半徑 ${c.radius} m）${demo?'（<b>示範資料</b>，Overpass 連線失敗）':''}。`); }
+}
+
+// ---------- 案例操作 ----------
+function setActive(id){ activeId=id; const c=cases.find(x=>x.id===id);
+  if(c){ renderLegend(c.counts); if(c.counts) setStatus(`作用中：「${c.name}」（周邊 ${c.poiRows.length} 點）`); } renderCases(); }
+function toggleVisible(id){ const c=cases.find(x=>x.id===id); if(!c)return; c.visible=!c.visible;
+  if(c.visible) c.layer.addTo(map); else map.removeLayer(c.layer); renderCases(); }
+function locateCase(id){ const c=cases.find(x=>x.id===id); if(c){ setActive(id); map.flyTo([c.lat,c.lng],16); } }
+function requeryCase(id){ const c=cases.find(x=>x.id===id); if(c){ setActive(id); queryCase(c); } }
+function editCase(id){ const c=cases.find(x=>x.id===id); if(!c)return;
+  const nm=prompt('標的名稱：',c.name); if(nm===null)return; c.name=nm.trim()||c.name;
+  const r=prompt('半徑（公尺）：',c.radius); if(r!==null){ const v=+r; if(v>0){ c.radius=v; c.circle.setRadius(v); } }
+  c.marker.setTooltipContent(c.name); renderCases(); queryCase(c); }
+function deleteCase(id){ const i=cases.findIndex(x=>x.id===id); if(i<0)return;
+  map.removeLayer(cases[i].layer); cases.splice(i,1);
+  if(activeId===id){ activeId=cases.length?cases[cases.length-1].id:null; const a=cases.find(x=>x.id===activeId);
+    renderLegend(a?a.counts:null); setStatus(a?`作用中：「${a.name}」`:'尚無標的。'); } renderCases(); }
+
+// ---------- 分類彙總（供匯出/比對表）----------
+function summaryRows(c){   // 回傳 [{group, facility, count, nearestName, nearestDist}]
+  return FACILITIES.map(f=>{
+    const items=c.poiRows.filter(p=>p.facility===f.name).sort((a,b)=>a.dist-b.dist);
+    return { group:f.group, facility:f.name, count:items.length,
+      nearestName: items.length?items[0].name:'無', nearestDist: items.length?items[0].dist:'-' };
+  });
+}
+
+// ---------- 匯出：周邊機能分類彙總（比照 REAA Excel）----------
+function exportCase(id){
+  const c=cases.find(x=>x.id===id); if(!c){ return; }
+  const rows=summaryRows(c);
+  const aoa=[['分類','設施名稱','個數','最近設施','距離(m)']];
+  const merges=[]; let r=1;
+  GROUPS.forEach(g=>{
+    const gr=rows.filter(x=>x.group===g); const start=r;
+    gr.forEach(x=>{ aoa.push([g, x.facility, x.count, x.nearestName, x.nearestDist]); r++; });
+    if(gr.length>1) merges.push({ s:{r:start,c:0}, e:{r:r-1,c:0} });
+  });
+  if(c.demo) aoa.push([], ['※ 本表為示範資料（Overpass 連線失敗，未取得即時資料）。請按 🔄 重新查詢。']);
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  ws['!merges']=merges;
+  ws['!cols']=[{wch:12},{wch:14},{wch:8},{wch:32},{wch:10}];
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'周邊機能');
+  XLSX.writeFile(wb, `${c.name}_周邊機能_${c.radius}m${c.demo?'_示範':''}.xlsx`);
+}
+
+// ---------- 渲染案例清單 ----------
+function renderCases(){
+  const el=document.getElementById('caseList');
+  document.getElementById('caseCount').textContent = cases.length?`共 ${cases.length} 筆`:'';
+  if(!cases.length){ el.innerHTML='<div class="empty">尚無標的，請先新增。</div>'; return; }
+  el.innerHTML=cases.map(c=>{
+    const nDeal=c.deals?c.deals.length:0;
+    const avg=nDeal?(c.deals.reduce((s,d)=>s+d['單價(萬/坪)'],0)/nDeal).toFixed(1):'—';
+    const src = c.demo===undefined ? '' : (c.demo
+      ? '<span style="color:#dc2626;font-weight:700">⚠ 示範資料</span>'
+      : '<span style="color:#16a34a;font-weight:700">✓ 即時 OSM</span>');
+    return `<div class="case ${c.id===activeId?'active':''} ${c.visible?'':'hidden'}">
+      <div class="case-top"><div>
+        <div class="cname">${c.name}</div>
+        <div class="cmeta">半徑 ${c.radius} m｜周邊 ${c.poiRows.length} 點　${src}</div>
+        <div class="cmeta">實價 ${nDeal} 筆（均價 ${avg} 萬/坪）</div>
+      </div></div>
+      <div class="acts">
+        <button class="${c.visible?'':'off'}" title="顯示/隱藏" onclick="toggleVisible(${c.id})">${c.visible?'👁':'🚫'}</button>
+        <button title="定位" onclick="locateCase(${c.id})">➡️</button>
+        <button title="重新查詢周邊（Overpass）" onclick="requeryCase(${c.id})">🔄</button>
+        <button title="編輯" onclick="editCase(${c.id})">✏️</button>
+        <button title="比較案例（實價登錄）" onclick="openDeals(${c.id})">🏷️</button>
+        <button title="下載周邊機能彙總 Excel" onclick="exportCase(${c.id})">⬇️</button>
+        <button class="del" title="刪除" onclick="deleteCase(${c.id})">🗑️</button>
+      </div></div>`;
+  }).join('');
+}
+
+// ---------- 圖例（依分類分組）----------
+function renderLegend(counts){
+  const el=document.getElementById('legend');
+  el.innerHTML=GROUPS.map(g=>{
+    const facs=FACILITIES.filter(f=>f.group===g);
+    return `<div class="leggrp">${g}</div>` + facs.map(f=>`
+      <div class="legrow"><div class="legleft"><div class="dot" style="background:${f.color}">${f.emoji}</div><span>${f.name}</span></div>
+      <span class="count">${counts?counts[f.name]:0}</span></div>`).join('');
+  }).join('');
+}
+renderLegend(null);
+
+// ---------- 比對表 ----------
+function openCompare(){
+  if(!cases.length){ alert('尚無標的'); return; }
+  const per=cases.map(c=>({ c, s:summaryRows(c) }));
+  let html='<table><thead><tr><th>分類</th><th>設施名稱</th>'
+    + per.map(p=>`<th>${p.c.name}<br><span class="near">半徑 ${p.c.radius}m</span></th>`).join('') + '</tr></thead><tbody>';
+  GROUPS.forEach(g=>{
+    const facs=FACILITIES.filter(f=>f.group===g);
+    facs.forEach((f,i)=>{
+      html+='<tr>';
+      if(i===0) html+=`<td class="grp" rowspan="${facs.length}">${g}</td>`;
+      html+=`<td class="cat">${f.emoji} ${f.name}</td>`;
+      html+=per.map(p=>{ const row=p.s.find(x=>x.facility===f.name);
+        return `<td>${row.count}${row.count?`<br><span class="near">最近 ${row.nearestDist}m</span>`:''}</td>`; }).join('');
+      html+='</tr>';
+    });
+  });
+  html+=`<tr class="total"><td class="grp">合計</td><td>—</td>`+per.map(p=>`<td>${p.c.poiRows.length}</td>`).join('')+'</tr>';
+  html+='</tbody></table>';
+  openModalGeneric('各標的周邊機能比對', html, exportCompare);
+}
+function exportCompare(){
+  if(!cases.length) return;
+  const per=cases.map(c=>({ c, s:summaryRows(c) }));
+  const aoa=[['分類','設施名稱', ...per.map(p=>`${p.c.name}(${p.c.radius}m)`)]];
+  const merges=[]; let r=1;
+  GROUPS.forEach(g=>{
+    const facs=FACILITIES.filter(f=>f.group===g); const start=r;
+    facs.forEach(f=>{ aoa.push([g, f.name, ...per.map(p=>p.s.find(x=>x.facility===f.name).count)]); r++; });
+    if(facs.length>1) merges.push({ s:{r:start,c:0}, e:{r:r-1,c:0} });
+  });
+  aoa.push(['合計','—', ...per.map(p=>p.c.poiRows.length)]);
+  const ws=XLSX.utils.aoa_to_sheet(aoa); ws['!merges']=merges;
+  ws['!cols']=[{wch:12},{wch:14}, ...per.map(()=>({wch:16}))];
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'機能比對');
+  XLSX.writeFile(wb,'各標的機能比對.xlsx');
+}
+
+// ---------- 比較案例 modal ----------
+function openDeals(id){
+  const c=cases.find(x=>x.id===id); if(!c) return;
+  if(!c.deals||!c.deals.length){ alert('此標的尚無比較案例'); return; }
+  const ds=c.deals.slice().sort((a,b)=>b['交易年月'].localeCompare(a['交易年月'])), s=dealStats(ds);
+  const summary=`<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:13px;line-height:1.8">
+    <b>估價參考（比較法）</b>　筆數 <b>${s.n}</b>　|　平均單價 <b style="color:#b45309">${s.avg.toFixed(1)}</b> 萬/坪　|　中位數 ${s.med.toFixed(1)}　|　區間 ${s.min}~${s.max}　|　平均屋齡 ${s.avgAge.toFixed(0)} 年
+    <div style="color:#b45309;font-size:11px;margin-top:4px">⚠ 本表為<b>模擬示範資料</b>，正式版應接內政部不動產成交案件實價登錄開放資料。</div></div>`;
+  const cols=['交易年月','地址','型態','總價(萬)','單價(萬/坪)','建坪','屋齡','樓層'];
+  let html=summary+'<table><thead><tr>'+cols.map(h=>`<th>${h}</th>`).join('')+'</tr></thead><tbody>'
+    +ds.map(d=>`<tr>${cols.map(k=>`<td${k==='地址'?' class="cat"':''}>${d[k]}</td>`).join('')}</tr>`).join('')+'</tbody></table>';
+  openModalGeneric(`${c.name} · 比較案例（實價登錄）`, html, ()=>exportDeals(c));
+}
+function exportDeals(c){
+  const cols=['交易年月','地址','型態','總價(萬)','單價(萬/坪)','建坪','屋齡','樓層'];
+  const rows=c.deals.slice().sort((a,b)=>b['交易年月'].localeCompare(a['交易年月'])).map(d=>Object.fromEntries(cols.map(k=>[k,d[k]])));
+  const s=dealStats(c.deals);
+  const ws=XLSX.utils.json_to_sheet(rows);
+  XLSX.utils.sheet_add_aoa(ws,[[],['平均單價',s.avg.toFixed(1)],['中位數單價',s.med.toFixed(1)],['平均屋齡',s.avgAge.toFixed(0)]],{origin:-1});
+  ws['!cols']=[{wch:9},{wch:14},{wch:11},{wch:9},{wch:11},{wch:8},{wch:7},{wch:8}];
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'比較案例');
+  XLSX.writeFile(wb,`${c.name}_比較案例.xlsx`);
+}
+
+// ---------- 通用 modal ----------
+let modalExportFn=null;
+function openModalGeneric(title,html,exportFn){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').innerHTML=html;
+  modalExportFn=exportFn||null;
+  document.getElementById('modalExport').style.display=exportFn?'':'none';
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+
+// ---------- 列印套繪 ----------
+function preparePrint(){
+  const c=cases.find(x=>x.id===activeId)||cases[0]; if(!c){ alert('尚無標的可列印'); return false; }
+  const d=new Date(), ymd=`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+  document.getElementById('phTitle').textContent=`不動產估價輔助圖 — ${c.name}`;
+  document.getElementById('phMeta').textContent=`勘估半徑 ${c.radius} m　|　周邊機能 ${c.poiRows.length} 點　|　中心座標 ${c.lat.toFixed(5)}, ${c.lng.toFixed(5)}　|　製圖日期 ${ymd}`;
+  const gt={}; GROUPS.forEach(g=>gt[g]=0);
+  if(c.counts) FACILITIES.forEach(f=>gt[f.group]+=c.counts[f.name]);
+  document.getElementById('plBody').innerHTML=GROUPS.map(g=>`<div class="lr"><span class="sw" style="background:#1e40af"></span>${g}：${gt[g]}</div>`).join('');
+  return true;
+}
+
+// ---------- 事件 ----------
+document.getElementById('btnGeocode').onclick=async()=>{
+  const q=document.getElementById('addr').value.trim(); if(!q)return; setStatus('地址定位中…');
+  try{ const u='https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?singleLine='+encodeURIComponent(q)+'&countryCode=TWN&maxLocations=1&f=pjson';
+    const r=await(await fetch(u)).json();
+    if(!r.candidates||!r.candidates.length){ alert('查無此地址'); setStatus('查無此地址。'); return; }
+    await addCase(r.candidates[0].location.y, r.candidates[0].location.x, q);
+  }catch(e){ alert('定位失敗：'+e); }
+};
+document.getElementById('btnClickMode').onclick=()=>{ clickMode=!clickMode;
+  document.getElementById('btnClickMode').textContent=clickMode?'點地圖中…(再按取消)':'點地圖新增';
+  map.getContainer().style.cursor=clickMode?'crosshair':''; };
+map.on('click',e=>{ if(clickMode) addCase(e.latlng.lat,e.latlng.lng,'標的'+(++clickIdx)); });
+document.getElementById('btnCompare').onclick=openCompare;
+document.getElementById('modalExport').onclick=()=>{ if(modalExportFn) modalExportFn(); };
+document.getElementById('modal').onclick=e=>{ if(e.target.id==='modal') closeModal(); };
+document.getElementById('btnPrint').onclick=()=>{ if(!preparePrint())return; map.invalidateSize(); setTimeout(()=>window.print(),300); };
+function setStatus(html){ document.getElementById('status').innerHTML=html; }
+</script>
+</body>
+</html>
